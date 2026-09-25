@@ -1,0 +1,31 @@
+-- Draft only — do NOT run until a favorites-table failure is diagnosed.
+-- Favorites app code does not touch public.profiles.
+-- Profiles are created by the signup trigger; do not grant INSERT/UPDATE on profiles
+-- for the Favorites feature.
+
+-- ---------- favorites (draft) ----------
+-- grant select, insert, delete on table public.favorites to authenticated;
+--
+-- do $$
+-- declare
+--   seq_name text;
+-- begin
+--   seq_name := pg_get_serial_sequence('public.favorites', 'id');
+--   if seq_name is not null then
+--     execute format('grant usage, select on sequence %s to authenticated', seq_name);
+--   end if;
+-- end $$;
+--
+-- alter table public.favorites enable row level security;
+--
+-- create policy "favorites_select_own"
+--   on public.favorites for select to authenticated
+--   using (auth.uid() = user_id);
+--
+-- create policy "favorites_insert_own"
+--   on public.favorites for insert to authenticated
+--   with check (auth.uid() = user_id);
+--
+-- create policy "favorites_delete_own"
+--   on public.favorites for delete to authenticated
+--   using (auth.uid() = user_id);

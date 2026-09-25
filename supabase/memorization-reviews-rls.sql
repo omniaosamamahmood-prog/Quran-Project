@@ -1,0 +1,23 @@
+-- Reference only — schema/RLS already configured on public.memorization_reviews.
+-- Authenticated: SELECT, INSERT, UPDATE, DELETE where auth.uid() = user_id.
+-- UNIQUE(user_id, memorization_id).
+-- ON DELETE CASCADE from memorization.
+-- Review app code does not touch public.profiles.
+-- Do NOT run this file to recreate the table.
+
+-- create policy "memorization_reviews_select_own"
+--   on public.memorization_reviews for select to authenticated
+--   using (auth.uid() = user_id);
+--
+-- create policy "memorization_reviews_insert_own"
+--   on public.memorization_reviews for insert to authenticated
+--   with check (auth.uid() = user_id);
+--
+-- create policy "memorization_reviews_update_own"
+--   on public.memorization_reviews for update to authenticated
+--   using (auth.uid() = user_id)
+--   with check (auth.uid() = user_id);
+--
+-- create policy "memorization_reviews_delete_own"
+--   on public.memorization_reviews for delete to authenticated
+--   using (auth.uid() = user_id);

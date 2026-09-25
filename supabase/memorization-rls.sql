@@ -1,0 +1,37 @@
+-- Reference only — schema/RLS already configured on public.memorization.
+-- Authenticated: SELECT, INSERT, UPDATE, DELETE where auth.uid() = user_id.
+-- Unit model: unit_type ('ayah'|'range'|'page'), start/end ayah, page_number.
+-- Memorization app code does not touch public.profiles.
+-- Profiles are created by the signup trigger.
+-- Do NOT run this file to recreate the table.
+
+-- grant select, insert, update, delete on table public.memorization to authenticated;
+--
+-- do $$
+-- declare
+--   seq_name text;
+-- begin
+--   seq_name := pg_get_serial_sequence('public.memorization', 'id');
+--   if seq_name is not null then
+--     execute format('grant usage, select on sequence %s to authenticated', seq_name);
+--   end if;
+-- end $$;
+--
+-- alter table public.memorization enable row level security;
+--
+-- create policy "memorization_select_own"
+--   on public.memorization for select to authenticated
+--   using (auth.uid() = user_id);
+--
+-- create policy "memorization_insert_own"
+--   on public.memorization for insert to authenticated
+--   with check (auth.uid() = user_id);
+--
+-- create policy "memorization_update_own"
+--   on public.memorization for update to authenticated
+--   using (auth.uid() = user_id)
+--   with check (auth.uid() = user_id);
+--
+-- create policy "memorization_delete_own"
+--   on public.memorization for delete to authenticated
+--   using (auth.uid() = user_id);

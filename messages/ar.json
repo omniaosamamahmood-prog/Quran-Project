@@ -1,0 +1,328 @@
+{
+  "Metadata": {
+    "title": "رفيق القرآن",
+    "description": "رفيقك اليومي للقراءة والحفظ والتدبر"
+  },
+  "Brand": {
+    "name": "رفيق القرآن",
+    "secondary": "Quran Companion"
+  },
+  "Navigation": {
+    "home": "الرئيسية",
+    "quran": "القرآن",
+    "memorization": "الحفظ",
+    "favorites": "المفضلة",
+    "adhkar": "الأذكار",
+    "primary": "التنقل الرئيسي",
+    "account": "الحساب",
+    "logout": "تسجيل الخروج",
+    "signedInAs": "مسجّل الدخول باسم {name}",
+    "languageSwitchLabel": "English",
+    "skipToContent": "تخطي إلى المحتوى"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "رفيقك مع كتاب الله",
+      "title": "اقرأ، استمع، احفظ <accent>وتدبّر</accent>",
+      "description": "تجربة هادئة تساعدك على أن تجعل القرآن جزءًا من يومك.",
+      "primaryCta": "ابدأ القراءة",
+      "secondaryCta": "استمع للقرآن"
+    },
+    "quickActions": {
+      "label": "اختصارات",
+      "read": {
+        "title": "قراءة القرآن",
+        "description": "افتح المصحف وتابع التلاوة"
+      },
+      "listen": {
+        "title": "الاستماع",
+        "description": "استمع بتلاوة هادئة"
+      },
+      "memorize": {
+        "title": "الحفظ",
+        "description": "تابع ورد الحفظ"
+      },
+      "review": {
+        "title": "المراجعة",
+        "description": "ثبّت ما حفظته"
+      }
+    },
+    "continueReading": {
+      "title": "تابع القراءة",
+      "emptyTitle": "لم تبدأ القراءة بعد",
+      "emptyDescription": "ابدأ رحلتك من المصحف، واحفظ موضعك من صفحة القراءة.",
+      "emptyDescriptionSignedIn": "اختر آية في المصحف واحفظ موضع القراءة ليظهر هنا.",
+      "action": "ابدأ القراءة",
+      "surahLabel": "سورة {name}",
+      "positionMeta": "الصفحة {page} • الآية {ayah}",
+      "resumeAction": "متابعة القراءة"
+    },
+    "dailyJourney": {
+      "title": "رحلتك اليومية",
+      "description": "خطوات صغيرة تصنع فرقًا كبيرًا"
+    },
+    "memorizationProgress": {
+      "title": "الحفظ",
+      "description": "تابع تقدمك في الحفظ"
+    },
+    "adhkar": {
+      "title": "الأذكار",
+      "description": "أذكار الصباح والمساء بين يديك"
+    }
+  },
+  "Quran": {
+    "title": "القرآن الكريم",
+    "subtitle": "اختر سورة وابدأ القراءة",
+    "searchLabel": "ابحث عن سورة",
+    "searchPlaceholder": "ابحث عن سورة...",
+    "empty": "لا توجد سورة مطابقة لبحثك",
+    "surahUnit": "{count, plural, one {سورة} two {سورتان} few {سور} many {سورة} other {سورة}}",
+    "ayahUnit": "{count, plural, one {آية} two {آيتان} few {آيات} many {آية} other {آية}}",
+    "reader": {
+      "backToList": "العودة إلى السور",
+      "surahNumber": "سورة {number}",
+      "ayahMarker": "آية {number}"
+    },
+    "pageReader": {
+      "indicator": "صفحة {current} من {total}",
+      "surahTitle": "سورة {name}",
+      "previous": "السابقة",
+      "next": "التالية",
+      "navigation": "التنقل بين صفحات المصحف"
+    }
+  },
+  "Footer": {
+    "note": "رفيقك في القراءة والحفظ والمراجعة"
+  },
+  "Register": {
+    "title": "إنشاء حساب",
+    "subtitle": "انضم إلى رفيق القرآن وابدأ رحلة هادئة مع كتاب الله.",
+    "visualTitle": "رحلتك مع القرآن تبدأ من هنا",
+    "visualDescription": "اقرأ، احفظ، وراجع القرآن بخطوات هادئة ومنظمة.",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اسمك",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "٦ أحرف على الأقل",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "submit": "إنشاء حساب",
+    "submitting": "جاري إنشاء الحساب...",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول",
+    "errors": {
+      "nameRequired": "يرجى إدخال اسمك.",
+      "passwordTooShort": "يجب أن تكون كلمة المرور ٦ أحرف على الأقل.",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين."
+    },
+    "success": "تم إنشاء الحساب بنجاح. يرجى التحقق من بريدك الإلكتروني لتأكيد الحساب."
+  },
+  "Login": {
+    "title": "مرحباً بعودتك",
+    "subtitle": "سجّل دخولك لمتابعة رحلتك مع كتاب الله.",
+    "visualTitle": "تابع من حيث توقفت",
+    "visualDescription": "واصل القراءة والحفظ والتدبر في مساحة هادئة ومألوفة.",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "submitting": "جاري تسجيل الدخول...",
+    "noAccount": "ليس لديك حساب؟",
+    "signUp": "إنشاء حساب",
+    "emailConfirmed": "تم تأكيد بريدك الإلكتروني بنجاح. يمكنك تسجيل الدخول الآن."
+  },
+  "Pages": {
+    "quran": {
+      "title": "القرآن الكريم",
+      "description": "سيُتاح المصحف هنا للقراءة والاستماع."
+    },
+    "memorization": {
+      "title": "الحفظ",
+      "description": "سيظهر برنامج الحفظ والمراجعة هنا."
+    },
+    "favorites": {
+      "title": "المفضلة",
+      "description": "ستظهر مواضعك المحفوظة هنا."
+    },
+    "adhkar": {
+      "title": "الأذكار",
+      "description": "ستظهر أذكار الصباح والمساء هنا."
+    }
+  },
+  "Favorites": {
+    "title": "المفضلة",
+    "subtitle": "آيات حفظتها للقراءة والتدبر لاحقًا.",
+    "add": "إضافة إلى المفضلة",
+    "remove": "إزالة من المفضلة",
+    "emptyTitle": "لا توجد مفضلات بعد",
+    "emptyDescription": "أثناء قراءة القرآن، احفظ الآيات التي تهمك.",
+    "emptyCta": "افتح القرآن",
+    "itemMeta": "سورة {surahName} ({surahNumber}) · آية {ayahNumber}",
+    "openInQuran": "فتح في القرآن",
+    "mushaf": {
+      "selectHint": "اضغط على رقم الآية لحفظها في المفضلة",
+      "openActions": "إجراءات الآية {number}",
+      "selected": "{surahName} · آية {ayahNumber}",
+      "actionHint": "احفظ هذه الآية، أو أزلها إن كانت محفوظة بالفعل.",
+      "dismiss": "إغلاق"
+    },
+    "adding": "جاري الحفظ...",
+    "removing": "جاري الإزالة...",
+    "errors": {
+      "toggleFailed": "تعذر تحديث المفضلة. حاول مرة أخرى.",
+      "toggleFailedWithCode": "تعذر تحديث المفضلة ({code}). حاول مرة أخرى.",
+      "permission": "ليس لديك صلاحية لتحديث المفضلة. تحقّق من سياسات RLS لجدول favorites في Supabase.",
+      "profileRequired": "ملف شخصي مفقود بشكل غير متوقع (FK 23503). تُنشأ ملفات profiles عبر trigger التسجيل — ميزة المفضلة لا تنشئها.",
+      "invalid": "مرجع الآية غير صالح.",
+      "notFound": "لم يتم العثور على هذه المفضلة."
+    }
+  },
+  "ReadingProgress": {
+    "save": "حفظ موضع القراءة",
+    "saving": "جاري الحفظ...",
+    "saved": "تم حفظ موضع القراءة",
+    "mushaf": {
+      "selectHint": "اضغط على رقم الآية للمفضلة أو موضع القراءة أو الحفظ",
+      "actionHint": "احفظ موضعك، أو أدر المفضلة، أو أضف هذه الآية إلى الحفظ."
+    },
+    "errors": {
+      "saveFailed": "تعذر حفظ موضع القراءة. حاول مرة أخرى.",
+      "saveFailedWithCode": "تعذر حفظ موضع القراءة ({code}). حاول مرة أخرى.",
+      "permission": "ليس لديك صلاحية لحفظ موضع القراءة. تحقّق من سياسات RLS لجدول reading_progress في Supabase.",
+      "profileRequired": "ملف شخصي مفقود بشكل غير متوقع (FK 23503). تُنشأ ملفات profiles عبر trigger التسجيل — ميزة موضع القراءة لا تنشئها.",
+      "invalid": "مرجع موضع القراءة غير صالح."
+    }
+  },
+  "Memorization": {
+    "title": "الحفظ",
+    "subtitle": "تابع وحدات الحفظ — آيات ونطاقات وصفحات — أثناء تعلّمك.",
+    "adding": "جاري الإضافة...",
+    "alreadyAdded": "في قائمة الحفظ",
+    "markMemorized": "تم الحفظ",
+    "moveToLearning": "إعادة إلى قيد الحفظ",
+    "remove": "إزالة",
+    "removeConfirm": "إزالة هذه الوحدة من قائمة الحفظ؟",
+    "updating": "جاري التحديث...",
+    "emptyTitle": "لم تبدأ خطة الحفظ بعد",
+    "emptyDescription": "اختر آية أو مجموعة آيات أو صفحة كاملة من المصحف وأضفها إلى الحفظ.",
+    "emptyCta": "افتح القرآن",
+    "openInQuran": "فتح في القرآن",
+    "goToReview": "انتقل إلى المراجعة",
+    "unit": {
+      "ayah": "سورة {name} • الآية {ayah}",
+      "range": "سورة {name} • الآيات {start}–{end}",
+      "page": "الصفحة {page}",
+      "pageSurahs": "تشمل: {names}"
+    },
+    "status": {
+      "learning": "قيد الحفظ",
+      "memorized": "محفوظة"
+    },
+    "stats": {
+      "label": "تقدم الحفظ",
+      "total": "الوحدات",
+      "learning": "قيد الحفظ",
+      "memorized": "محفوظة",
+      "completion": "مكتمل"
+    },
+    "sections": {
+      "learningTitle": "قيد الحفظ الآن",
+      "learningDescription": "وحدات تعمل عليها حاليًا.",
+      "learningEmpty": "لا توجد وحدات قيد الحفظ الآن.",
+      "memorizedTitle": "المحفوظ",
+      "memorizedDescription": "وحدات أتممت حفظها.",
+      "memorizedEmpty": "لا توجد وحدات محفوظة بعد."
+    },
+    "mushaf": {
+      "selectHint": "اضغط على رقم الآية للمفضلة أو موضع القراءة أو الحفظ",
+      "actionHint": "احفظ موضعك، أو أدر المفضلة، أو أضف وحدة حفظ.",
+      "memorizeAyah": "حفظ هذه الآية",
+      "selectRange": "تحديد مجموعة آيات",
+      "memorizePage": "حفظ الصفحة كاملة",
+      "rangeActive": "نطاق من سورة {surahName}، الآية {start}",
+      "chooseEndAyah": "اضغط على آية النهاية في نفس السورة.",
+      "rangeConfirmHint": "تأكيد النطاق: الآيات {start}–{end}",
+      "confirmRange": "إضافة هذا النطاق",
+      "cancel": "إلغاء",
+      "crossSurahError": "يجب أن يبقى النطاق داخل سورة واحدة. اختر آية نهاية في نفس السورة."
+    },
+    "errors": {
+      "addFailed": "تعذر الإضافة إلى الحفظ. حاول مرة أخرى.",
+      "addFailedWithCode": "تعذر الإضافة إلى الحفظ ({code}). حاول مرة أخرى.",
+      "actionFailed": "تعذر تحديث الحفظ. حاول مرة أخرى.",
+      "actionFailedWithCode": "تعذر تحديث الحفظ ({code}). حاول مرة أخرى.",
+      "permission": "ليس لديك صلاحية لتحديث الحفظ. تحقّق من سياسات RLS لجدول memorization في Supabase.",
+      "profileRequired": "ملف شخصي مفقود بشكل غير متوقع (FK 23503). تُنشأ ملفات profiles عبر trigger التسجيل — ميزة الحفظ لا تنشئها.",
+      "invalid": "وحدة الحفظ غير صالحة.",
+      "notFound": "لم يتم العثور على عنصر الحفظ.",
+      "duplicate": "هذه الوحدة موجودة بالفعل في قائمة الحفظ.",
+      "crossSurah": "يجب أن يبقى النطاق داخل سورة واحدة."
+    }
+  },
+  "Review": {
+    "title": "المراجعة",
+    "subtitle": "ثبّت وحدات الحفظ بمراجعة هادئة ومركّزة.",
+    "startReview": "ابدأ المراجعة",
+    "startHint": "{count, plural, zero {لا توجد وحدات مستحقة.} one {وحدة واحدة مستحقة للمراجعة.} two {وحدتان مستحقتان للمراجعة.} few {# وحدات مستحقة للمراجعة.} many {# وحدة مستحقة للمراجعة.} other {# وحدة مستحقة للمراجعة.}}",
+    "caughtUpTitle": "أنت مواكب",
+    "caughtUpDescription": "لا يوجد شيء مستحق الآن. ستظهر المراجعات القادمة أدناه.",
+    "emptyTitle": "لا توجد خطة مراجعة بعد",
+    "emptyDescription": "علّم وحدات كمحفوظة في الحفظ لتبدأ مراجعتها هنا.",
+    "emptyCta": "افتح الحفظ",
+    "openInQuran": "فتح في القرآن",
+    "unit": {
+      "ayah": "سورة {name} • الآية {ayah}",
+      "range": "سورة {name} • الآيات {start}–{end}",
+      "page": "الصفحة {page}"
+    },
+    "stats": {
+      "label": "نظرة على المراجعة",
+      "overdue": "متأخرة",
+      "dueToday": "مستحقة اليوم",
+      "upcoming": "قادمة"
+    },
+    "sections": {
+      "overdueTitle": "متأخرة",
+      "overdueEmpty": "لا توجد مراجعات متأخرة.",
+      "dueTodayTitle": "مستحقة اليوم",
+      "dueTodayEmpty": "لا شيء مجدول لليوم.",
+      "upcomingTitle": "مراجعات قادمة",
+      "upcomingEmpty": "لا توجد مراجعات قادمة.",
+      "recentTitle": "راجعتها مؤخرًا",
+      "recentEmpty": "لم تراجع أي وحدة بعد."
+    },
+    "ratings": {
+      "difficult": "صعبة",
+      "good": "جيدة",
+      "easy": "سهلة"
+    },
+    "session": {
+      "title": "جلسة المراجعة",
+      "progress": "{current} / {total}",
+      "promptAyah": "حاول تذكر الآية",
+      "promptRange": "حاول تذكر الآيات",
+      "promptPage": "حاول مراجعة الصفحة من حفظك",
+      "reveal": "إظهار الآية",
+      "ratePrompt": "كيف كان تذكّرك لهذه الوحدة؟",
+      "exit": "خروج",
+      "completeTitle": "أتممت مراجعة اليوم",
+      "completeDescription": "أحسنت، لا توجد وحدات أخرى مستحقة للمراجعة الآن.",
+      "backToDashboard": "العودة إلى المراجعة",
+      "openQuran": "افتح القرآن"
+    },
+    "errors": {
+      "rateFailed": "تعذر حفظ المراجعة. حاول مرة أخرى.",
+      "rateFailedWithCode": "تعذر حفظ المراجعة ({code}). حاول مرة أخرى.",
+      "permission": "ليس لديك صلاحية لتحديث المراجعة. تحقّق من سياسات RLS لجدول memorization_reviews.",
+      "profileRequired": "ملف شخصي مفقود بشكل غير متوقع (FK 23503). تُنشأ ملفات profiles عبر trigger التسجيل — المراجعة لا تنشئها.",
+      "notFound": "لم يتم العثور على عنصر المراجعة.",
+      "notDue": "هذه الوحدة ليست مستحقة للمراجعة بعد."
+    }
+  }
+}

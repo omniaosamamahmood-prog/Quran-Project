@@ -1,0 +1,21 @@
+-- Reference only — RLS is already enabled on public.reading_progress.
+-- Authenticated users: SELECT, INSERT, UPDATE where auth.uid() = user_id.
+-- Reading Progress app code does not touch public.profiles.
+-- Profiles are created by the signup trigger.
+
+-- grant select, insert, update on table public.reading_progress to authenticated;
+--
+-- alter table public.reading_progress enable row level security;
+--
+-- create policy "reading_progress_select_own"
+--   on public.reading_progress for select to authenticated
+--   using (auth.uid() = user_id);
+--
+-- create policy "reading_progress_insert_own"
+--   on public.reading_progress for insert to authenticated
+--   with check (auth.uid() = user_id);
+--
+-- create policy "reading_progress_update_own"
+--   on public.reading_progress for update to authenticated
+--   using (auth.uid() = user_id)
+--   with check (auth.uid() = user_id);

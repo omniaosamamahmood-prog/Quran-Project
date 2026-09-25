@@ -1,0 +1,328 @@
+{
+  "Metadata": {
+    "title": "Quran Companion",
+    "description": "Your daily companion for reading, memorization and reflection"
+  },
+  "Brand": {
+    "name": "Quran Companion",
+    "secondary": "رفيق القرآن"
+  },
+  "Navigation": {
+    "home": "Home",
+    "quran": "Quran",
+    "memorization": "Memorization",
+    "favorites": "Favorites",
+    "adhkar": "Adhkar",
+    "primary": "Primary navigation",
+    "account": "Account",
+    "logout": "Sign out",
+    "signedInAs": "Signed in as {name}",
+    "languageSwitchLabel": "العربية",
+    "skipToContent": "Skip to content"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "Your companion with the Book of Allah",
+      "title": "Read, listen, memorize and <accent>reflect</accent>",
+      "description": "A calm experience that helps you make the Quran part of your day.",
+      "primaryCta": "Start reading",
+      "secondaryCta": "Listen to the Quran"
+    },
+    "quickActions": {
+      "label": "Shortcuts",
+      "read": {
+        "title": "Read Quran",
+        "description": "Open the mushaf and continue reciting"
+      },
+      "listen": {
+        "title": "Listen",
+        "description": "Hear a calm recitation"
+      },
+      "memorize": {
+        "title": "Memorize",
+        "description": "Continue your memorization"
+      },
+      "review": {
+        "title": "Review",
+        "description": "Strengthen what you have learned"
+      }
+    },
+    "continueReading": {
+      "title": "Continue Reading",
+      "emptyTitle": "No saved place yet",
+      "emptyDescription": "Begin from the mushaf and save your place from the reader.",
+      "emptyDescriptionSignedIn": "Select an ayah in the mushaf and save your reading position to see it here.",
+      "action": "Start reading",
+      "surahLabel": "Surah {name}",
+      "positionMeta": "Page {page} • Ayah {ayah}",
+      "resumeAction": "Continue Reading"
+    },
+    "dailyJourney": {
+      "title": "Your daily journey",
+      "description": "Small steps make a lasting difference"
+    },
+    "memorizationProgress": {
+      "title": "Memorization",
+      "description": "Keep track of your memorization"
+    },
+    "adhkar": {
+      "title": "Adhkar",
+      "description": "Morning and evening remembrance, close at hand"
+    }
+  },
+  "Quran": {
+    "title": "The Holy Quran",
+    "subtitle": "Choose a Surah and start reading",
+    "searchLabel": "Search for a Surah",
+    "searchPlaceholder": "Search for a Surah...",
+    "empty": "No surah matches your search",
+    "surahUnit": "{count, plural, one {surah} other {surahs}}",
+    "ayahUnit": "{count, plural, one {ayah} other {ayahs}}",
+    "reader": {
+      "backToList": "Back to surahs",
+      "surahNumber": "Surah {number}",
+      "ayahMarker": "Ayah {number}"
+    },
+    "pageReader": {
+      "indicator": "Page {current} of {total}",
+      "surahTitle": "Surah {name}",
+      "previous": "Previous",
+      "next": "Next",
+      "navigation": "Mushaf page navigation"
+    }
+  },
+  "Footer": {
+    "note": "Your companion for reading, memorization and review"
+  },
+  "Register": {
+    "title": "Create Account",
+    "subtitle": "Join Quran Companion and begin a calm journey with the Book of Allah.",
+    "visualTitle": "Your journey with the Quran starts here",
+    "visualDescription": "Read, memorize, and review the Quran with a calm and organized experience.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "At least 6 characters",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Create Account",
+    "submitting": "Creating account...",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "passwordMismatch": "Passwords do not match."
+    },
+    "success": "Account created successfully. Please check your email to confirm your account."
+  },
+  "Login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to continue your journey with the Book of Allah.",
+    "visualTitle": "Continue where you left off",
+    "visualDescription": "Pick up your reading, memorization, and reflection with a calm, familiar space.",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "signUp": "Create account",
+    "emailConfirmed": "Your email has been confirmed successfully. You can now sign in."
+  },
+  "Pages": {
+    "quran": {
+      "title": "The Holy Quran",
+      "description": "The mushaf will be available here for reading and listening."
+    },
+    "memorization": {
+      "title": "Memorization",
+      "description": "Your memorization and review will appear here."
+    },
+    "favorites": {
+      "title": "Favorites",
+      "description": "Saved places will appear here."
+    },
+    "adhkar": {
+      "title": "Adhkar",
+      "description": "Morning and evening remembrance will appear here."
+    }
+  },
+  "Favorites": {
+    "title": "Favorites",
+    "subtitle": "Ayahs you have saved for later reading and reflection.",
+    "add": "Add to Favorites",
+    "remove": "Remove from Favorites",
+    "emptyTitle": "No favorites yet",
+    "emptyDescription": "While reading the Quran, save ayahs that matter to you.",
+    "emptyCta": "Open the Quran",
+    "itemMeta": "Surah {surahName} ({surahNumber}) · Ayah {ayahNumber}",
+    "openInQuran": "Open in Quran",
+    "mushaf": {
+      "selectHint": "Tap an ayah number to save it to Favorites",
+      "openActions": "Actions for ayah {number}",
+      "selected": "{surahName} · Ayah {ayahNumber}",
+      "actionHint": "Save this ayah, or remove it if it is already saved.",
+      "dismiss": "Close"
+    },
+    "adding": "Saving...",
+    "removing": "Removing...",
+    "errors": {
+      "toggleFailed": "Could not update favorite. Please try again.",
+      "toggleFailedWithCode": "Could not update favorite ({code}). Please try again.",
+      "permission": "You do not have permission to update favorites. Check Supabase RLS policies for the favorites table.",
+      "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — this Favorites flow does not create them.",
+      "invalid": "This ayah reference is not valid.",
+      "notFound": "That favorite was not found."
+    }
+  },
+  "ReadingProgress": {
+    "save": "Save reading position",
+    "saving": "Saving...",
+    "saved": "Reading position saved",
+    "mushaf": {
+      "selectHint": "Tap an ayah number for Favorites, reading position, or memorization",
+      "actionHint": "Save your place, manage Favorites, or add this ayah to memorization."
+    },
+    "errors": {
+      "saveFailed": "Could not save reading position. Please try again.",
+      "saveFailedWithCode": "Could not save reading position ({code}). Please try again.",
+      "permission": "You do not have permission to save reading progress. Check Supabase RLS policies for the reading_progress table.",
+      "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — this Reading Progress flow does not create them.",
+      "invalid": "This reading position reference is not valid."
+    }
+  },
+  "Memorization": {
+    "title": "Memorization",
+    "subtitle": "Track memorization units — ayahs, ranges, and pages — as you learn.",
+    "adding": "Adding...",
+    "alreadyAdded": "In memorization",
+    "markMemorized": "Mark as memorized",
+    "moveToLearning": "Back to learning",
+    "remove": "Remove",
+    "removeConfirm": "Remove this unit from your memorization list?",
+    "updating": "Updating...",
+    "emptyTitle": "You haven't started memorizing yet.",
+    "emptyDescription": "Choose an ayah, a range, or a full page from the Mushaf and add it to your memorization list.",
+    "emptyCta": "Open the Quran",
+    "openInQuran": "Open in Quran",
+    "goToReview": "Go to Review",
+    "unit": {
+      "ayah": "Surah {name} · Ayah {ayah}",
+      "range": "Surah {name} · Ayahs {start}–{end}",
+      "page": "Page {page}",
+      "pageSurahs": "Includes: {names}"
+    },
+    "status": {
+      "learning": "Learning",
+      "memorized": "Memorized"
+    },
+    "stats": {
+      "label": "Memorization progress",
+      "total": "Units",
+      "learning": "Learning",
+      "memorized": "Memorized",
+      "completion": "Complete"
+    },
+    "sections": {
+      "learningTitle": "Currently memorizing",
+      "learningDescription": "Units you are actively working on.",
+      "learningEmpty": "No units in learning right now.",
+      "memorizedTitle": "Memorized",
+      "memorizedDescription": "Units you have marked as memorized.",
+      "memorizedEmpty": "No memorized units yet."
+    },
+    "mushaf": {
+      "selectHint": "Tap an ayah number for Favorites, reading position, or memorization",
+      "actionHint": "Save your place, manage Favorites, or add a memorization unit.",
+      "memorizeAyah": "Memorize this ayah",
+      "selectRange": "Select ayah range",
+      "memorizePage": "Memorize this page",
+      "rangeActive": "Range from Surah {surahName}, ayah {start}",
+      "chooseEndAyah": "Tap the ending ayah in the same Surah.",
+      "rangeConfirmHint": "Confirm range: ayahs {start}–{end}",
+      "confirmRange": "Add this range",
+      "cancel": "Cancel",
+      "crossSurahError": "Ranges must stay within one Surah. Choose an ending ayah in the same Surah."
+    },
+    "errors": {
+      "addFailed": "Could not add to memorization. Please try again.",
+      "addFailedWithCode": "Could not add to memorization ({code}). Please try again.",
+      "actionFailed": "Could not update memorization. Please try again.",
+      "actionFailedWithCode": "Could not update memorization ({code}). Please try again.",
+      "permission": "You do not have permission to update memorization. Check Supabase RLS policies for the memorization table.",
+      "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — this Memorization flow does not create them.",
+      "invalid": "This memorization unit is not valid.",
+      "notFound": "That memorization item was not found.",
+      "duplicate": "This unit is already in your memorization list.",
+      "crossSurah": "Ranges must stay within one Surah."
+    }
+  },
+  "Review": {
+    "title": "Review",
+    "subtitle": "Strengthen memorized units with a calm, focused review.",
+    "startReview": "Start review",
+    "startHint": "{count, plural, one {# unit is due for review.} other {# units are due for review.}}",
+    "caughtUpTitle": "You are caught up",
+    "caughtUpDescription": "Nothing is due right now. Upcoming reviews will appear below.",
+    "emptyTitle": "No review schedule yet",
+    "emptyDescription": "Mark units as memorized in Memorization to start reviewing them here.",
+    "emptyCta": "Open Memorization",
+    "openInQuran": "Open in Quran",
+    "unit": {
+      "ayah": "Surah {name} · Ayah {ayah}",
+      "range": "Surah {name} · Ayahs {start}–{end}",
+      "page": "Page {page}"
+    },
+    "stats": {
+      "label": "Review overview",
+      "overdue": "Overdue",
+      "dueToday": "Due today",
+      "upcoming": "Upcoming"
+    },
+    "sections": {
+      "overdueTitle": "Overdue",
+      "overdueEmpty": "No overdue reviews.",
+      "dueTodayTitle": "Due today",
+      "dueTodayEmpty": "Nothing scheduled for today.",
+      "upcomingTitle": "Upcoming reviews",
+      "upcomingEmpty": "No upcoming reviews.",
+      "recentTitle": "Recently reviewed",
+      "recentEmpty": "You have not reviewed any units yet."
+    },
+    "ratings": {
+      "difficult": "Difficult",
+      "good": "Good",
+      "easy": "Easy"
+    },
+    "session": {
+      "title": "Review session",
+      "progress": "{current} / {total}",
+      "promptAyah": "Try to recall the ayah from memory.",
+      "promptRange": "Try to recall these ayahs from memory.",
+      "promptPage": "Try to review this page from memory.",
+      "reveal": "Reveal ayah",
+      "ratePrompt": "How well did you remember this unit?",
+      "exit": "Exit",
+      "completeTitle": "Today's review is complete.",
+      "completeDescription": "There are no more units due for review right now.",
+      "backToDashboard": "Back to Review",
+      "openQuran": "Open the Quran"
+    },
+    "errors": {
+      "rateFailed": "Could not save your review. Please try again.",
+      "rateFailedWithCode": "Could not save your review ({code}). Please try again.",
+      "permission": "You do not have permission to update reviews. Check Supabase RLS policies for memorization_reviews.",
+      "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — Review does not create them.",
+      "notFound": "That review item was not found.",
+      "notDue": "This unit is not due for review yet."
+    }
+  }
+}

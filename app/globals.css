@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-latin-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-arabic-ui), sans-serif;
+  --font-display: var(--font-latin-display), Georgia, serif;
+  --font-naskh: var(--font-arabic-display), serif;
+  /* Reserved for verified Quran text only — never for UI labels. */
+  --font-quran: var(--font-quran-face, var(--font-arabic-display)), serif;
+
+  /* Sampled from public/images/quranbackground.png so page edges, the footer
+     strip and the rounded hero corners blend with the supplied artwork. */
+  --color-canvas: #faf5ea;
+  --color-surface: #ffffff;
+  --color-emerald: #235c48;
+  --color-emerald-deep: #17402f;
+  /* Sampled from public/images/hero.png */
+  --color-emerald-ink: #0b3223;
+  --color-emerald-muted: #3d7660;
+  --color-sage: #e8efe5;
+  --color-sage-deep: #d7e3d3;
+  --color-ink: #1b2621;
+  --color-muted: #6a716a;
+  --color-gold: #b8944a;
+  --color-gold-soft: #d9bd7c;
+  --color-line: #e4ddcd;
+  --color-line-soft: #efe9dc;
+
+  --shadow-card: 0 1px 2px rgb(16 45 34 / 0.04), 0 10px 28px -20px rgb(16 45 34 / 0.24);
+  --shadow-lift: 0 2px 6px rgb(16 45 34 / 0.07), 0 18px 40px -24px rgb(16 45 34 / 0.34);
+  --shadow-panel: 0 24px 56px -34px rgb(16 45 34 / 0.6);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  overflow-x: clip;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100dvh;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-arabic-ui), var(--font-latin-ui), sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  letter-spacing: 0;
+}
+
+html[lang="en"] body {
+  font-family: var(--font-latin-ui), var(--font-arabic-ui), sans-serif;
+}
+
+::selection {
+  background: var(--color-emerald);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-emerald);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
