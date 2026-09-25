@@ -6,25 +6,25 @@
 
 <p align="center">
   <img src="docs/badges/nextjs.svg" alt="Next.js 16" height="28" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/react.svg" alt="React 19" height="28" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/typescript.svg" alt="TypeScript 5" height="28" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/tailwind.svg" alt="Tailwind CSS 4" height="28" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/supabase.svg" alt="Supabase" height="28" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/i18n.svg" alt="i18n AR EN" height="28" />
 </p>
 
 <p align="center">
   <img src="docs/badges/license.svg" alt="License Private" height="22" />
-  &nbsp;
-  <img src="docs/badges/locales.svg" alt="Locales Arabic English" height="22" />
-  &nbsp;
+  &#160;
+  <img src="docs/badges/locales.svg" alt="Locales AR EN" height="22" />
+  &#160;
   <img src="docs/badges/quran.svg" alt="Quran Tanzil Uthmani" height="22" />
-  &nbsp;
+  &#160;
   <img src="docs/badges/status.svg" alt="Status Active" height="22" />
 </p>
 

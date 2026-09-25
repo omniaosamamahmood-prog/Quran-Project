@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="108" height="22" role="img" aria-label="License Private">
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="22" role="img" aria-label="License Private">
   <title>License Private</title>
-  <rect width="108" height="22" rx="4" fill="#0366D6"/>
-  <text x="54" y="15" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="600" fill="#fff">License · Private</text>
+  <rect width="120" height="22" rx="4" fill="#0366D6"/>
+  <text x="60" y="15" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">License Private</text>
 </svg>
