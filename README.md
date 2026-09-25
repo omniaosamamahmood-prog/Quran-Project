@@ -1,57 +1,60 @@
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" alt="Open Book" width="36" height="36" /> Quran Companion
+# 📖 Quran Companion
 
 ### رفيق القرآن
 
 > A calm, bilingual companion for reading the Mushaf, memorizing with intention, reviewing what you have learned, and keeping your place — all grounded in a trusted local Quran dataset.
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs&logoColor=white" />
-  <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
-  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-Auth%20%26%20Postgres-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" />
-  <img alt="next-intl" src="https://img.shields.io/badge/i18n-AR%20%7C%20EN-0B4A34?style=for-the-badge&logo=googletranslate&logoColor=white" />
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&amp;logo=nextdotjs&amp;logoColor=white" alt="Next.js" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=black" alt="React" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" alt="TypeScript" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&amp;logo=tailwindcss&amp;logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-Auth_%26_Postgres-3ECF8E?style=for-the-badge&amp;logo=supabase&amp;logoColor=white" alt="Supabase" /></a>
+  <a href="https://next-intl.dev"><img src="https://img.shields.io/badge/i18n-AR_%7C_EN-0B4A34?style=for-the-badge" alt="i18n" /></a>
 </p>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/badge/License-Private-informational?style=flat-square" />
-  <img alt="Locales" src="https://img.shields.io/badge/Locales-Arabic%20%7C%20English-success?style=flat-square" />
-  <img alt="Quran Source" src="https://img.shields.io/badge/Quran-Tanzil%20Uthmani-0F7A52?style=flat-square" />
-  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square" />
+  <img src="https://img.shields.io/badge/License-Private-blue?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/Locales-Arabic_%7C_English-2ea44f?style=flat-square" alt="Locales" />
+  <img src="https://img.shields.io/badge/Quran-Tanzil_Uthmani-0F7A52?style=flat-square" alt="Quran Source" />
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square" alt="Status" />
 </p>
+
+**Stack at a glance:** `Next.js 16` · `React 19` · `TypeScript 5` · `Tailwind CSS 4` · `Supabase` · `next-intl (AR | EN)`
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" alt="Star" width="28" height="28" /> Overview
+## ✨ Overview
 
 **Quran Companion** is a modern web application built for a focused Quran journey:
 
 | Focus | What it delivers |
 | --- | --- |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Scroll.png" width="20" height="20" alt="" /> **Reading** | Page-authentic Mushaf experience with precise ayah anchors |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bookmark%20Tabs.png" width="20" height="20" alt="" /> **Progress** | Explicit “save reading position” — never auto-overwritten |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Graduation%20Cap.png" width="20" height="20" alt="" /> **Memorization** | Units: single ayah, Surah range, or full Mushaf page |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Counterclockwise%20Arrows%20Button.png" width="20" height="20" alt="" /> **Review** | Spaced self-rating for each memorized unit |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Red%20Heart.png" width="20" height="20" alt="" /> **Favorites** | Save meaningful ayahs for later reflection |
-| <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Globe%20Showing%20Europe-Africa.png" width="20" height="20" alt="" /> **Locales** | Full Arabic (RTL) & English (LTR) application UI |
+| 📜 **Reading** | Page-authentic Mushaf experience with precise ayah anchors |
+| 📌 **Progress** | Explicit “save reading position” — never auto-overwritten |
+| 🎓 **Memorization** | Units: single ayah, Surah range, or full Mushaf page |
+| 🔄 **Review** | Spaced self-rating for each memorized unit |
+| ❤️ **Favorites** | Save meaningful ayahs for later reflection |
+| 🌍 **Locales** | Full Arabic (RTL) & English (LTR) application UI |
 
 Quran Arabic text is **always RTL**, resolved exclusively from the trusted local dataset — never generated, rewritten, or stored in the database.
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Sparkles.png" alt="Sparkles" width="28" height="28" /> Features
+## 🌟 Features
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" width="22" height="22" alt="" /> Mushaf Reader
-- Madinah Mushaf page layout with ornamental frame and ayah medallions  
-- Shared ayah-actions chrome (outside Quran text): Favorites · Save position · Memorization  
+### 📖 Mushaf Reader
+- Madinah Mushaf page layout with ornamental frame and ayah medallions
+- Shared ayah-actions chrome (outside Quran text): Favorites · Save position · Memorization
 - Deep links: `/{locale}/quran/page/{n}#ayah-{surah}-{ayah}`
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Round%20Pushpin.png" width="22" height="22" alt="" /> Continue Reading
-- One saved position per authenticated user  
-- Explicit save only — opening a page does **not** update progress  
+### 📍 Continue Reading
+- One saved position per authenticated user
+- Explicit save only — opening a page does **not** update progress
 - Home CTA resumes the exact Mushaf page and ayah
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Brain.png" width="22" height="22" alt="" /> Memorization Units
+### 🧠 Memorization Units
+
 | Unit | Meaning | Stored as |
 | --- | --- | --- |
 | **Ayah** | One verse | `unit_type = ayah` |
@@ -60,24 +63,24 @@ Quran Arabic text is **always RTL**, resolved exclusively from the trusted local
 
 Workspace sections: **Currently memorizing** · **Memorized** · real unit stats (not inflated ayah counts).
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20Index%20Dividers.png" width="22" height="22" alt="" /> Review System
-- One review schedule per memorization unit  
-- Reveal → self-rate: **Difficult** (+1 day) · **Good** (+3 days) · **Easy** (+7 days)  
+### 🗂️ Review System
+- One review schedule per memorization unit
+- Reveal → self-rate: **Difficult** (+1 day) · **Good** (+3 days) · **Easy** (+7 days)
 - Dashboard: overdue · due today · upcoming · start session
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Growing%20Heart.png" width="22" height="22" alt="" /> Favorites
-- Ayah-level favorites with RLS-protected Supabase storage  
+### 💖 Favorites
+- Ayah-level favorites with RLS-protected Supabase storage
 - Guest → locale-aware login with safe `next` return URL
 
-### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked%20with%20Key.png" width="22" height="22" alt="" /> Auth & Security
-- Supabase Auth (SSR + browser cookie session)  
-- Row Level Security: users only access their own rows  
-- Never trusts client-supplied `user_id` · no `service_role` in app code  
+### 🔐 Auth & Security
+- Supabase Auth (SSR + browser cookie session)
+- Row Level Security: users only access their own rows
+- Never trusts client-supplied `user_id` · no `service_role` in app code
 - Profiles created by signup trigger — features never invent profiles
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Hammer%20and%20Wrench.png" alt="Tools" width="28" height="28" /> Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 | --- | --- |
@@ -90,7 +93,7 @@ Workspace sections: **Currently memorizing** · **Memorized** · real unit stats
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png" alt="Folder" width="28" height="28" /> Project Structure
+## 📁 Project Structure
 
 ```text
 quran-project/
@@ -110,13 +113,13 @@ quran-project/
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Rocket.png" alt="Rocket" width="28" height="28" /> Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js** 20+ recommended  
-- **npm** (ships with Node)  
-- A **Supabase** project with Auth + the app tables / RLS already configured  
+- **Node.js** 20+ recommended
+- **npm** (ships with Node)
+- A **Supabase** project with Auth + the app tables / RLS already configured
 
 ### 1. Install
 
@@ -160,7 +163,7 @@ npm start
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Package.png" alt="Package" width="28" height="28" /> Scripts
+## 📦 Scripts
 
 | Command | Description |
 | --- | --- |
@@ -172,20 +175,20 @@ npm start
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shield.png" alt="Shield" width="28" height="28" /> Quran Data Safety
+## 🛡️ Quran Data Safety
 
 This project treats Quran text as sacred source material:
 
-- Content comes **only** from the local trusted datasets  
-- **Do not** normalize, trim, rewrite, translate, or regenerate ayah text for storage  
-- **Do not** store Quran text in Supabase — store references only (`surah` / `ayah` / `page` / unit fields)  
-- Display Quran Arabic **RTL** in every locale  
+- Content comes **only** from the local trusted datasets
+- **Do not** normalize, trim, rewrite, translate, or regenerate ayah text for storage
+- **Do not** store Quran text in Supabase — store references only (`surah` / `ayah` / `page` / unit fields)
+- Display Quran Arabic **RTL** in every locale
 
 Attribution follows the Tanzil Uthmani edition embedded in the dataset metadata.
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20File%20Box.png" alt="Database" width="28" height="28" /> Data Model (app-facing)
+## 🗃️ Data Model (app-facing)
 
 | Domain | Scope | Notes |
 | --- | --- | --- |
@@ -198,7 +201,7 @@ Reference SQL (not for casual re-runs) lives under `supabase/`.
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Globe%20Showing%20Asia-Australia.png" alt="Globe" width="28" height="28" /> Internationalization
+## 🌐 Internationalization
 
 | Locale | UI direction | Quran text |
 | --- | --- | --- |
@@ -209,16 +212,16 @@ All product copy lives in `messages/ar.json` and `messages/en.json` via **next-i
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Memo.png" alt="Memo" width="28" height="28" /> Roadmap notes
+## 📝 Roadmap notes
 
 Placeholders may still exist for areas such as listening experiences or Adhkar content expansion. Core reading, auth, favorites, progress, memorization units, and review are implemented end-to-end.
 
 ---
 
-## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Folded%20Hands.png" alt="Thanks" width="28" height="28" /> Acknowledgements
+## 🙏 Acknowledgements
 
-- **Tanzil** — Uthmani Quran text  
-- **Next.js** · **Supabase** · **next-intl** · **Tailwind CSS**  
+- **Tanzil** — Uthmani Quran text
+- **Next.js** · **Supabase** · **next-intl** · **Tailwind CSS**
 
 ---
 
