@@ -5,22 +5,28 @@
 > A calm, bilingual companion for reading the Mushaf, memorizing with intention, reviewing what you have learned, and keeping your place — all grounded in a trusted local Quran dataset.
 
 <p align="center">
-  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&amp;logo=nextdotjs&amp;logoColor=white" alt="Next.js" /></a>
-  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&amp;logo=react&amp;logoColor=black" alt="React" /></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&amp;logo=typescript&amp;logoColor=white" alt="TypeScript" /></a>
-  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&amp;logo=tailwindcss&amp;logoColor=white" alt="Tailwind CSS" /></a>
-  <a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-Auth_%26_Postgres-3ECF8E?style=for-the-badge&amp;logo=supabase&amp;logoColor=white" alt="Supabase" /></a>
-  <a href="https://next-intl.dev"><img src="https://img.shields.io/badge/i18n-AR_%7C_EN-0B4A34?style=for-the-badge" alt="i18n" /></a>
+  <img src="docs/badges/nextjs.svg" alt="Next.js 16" height="28" />
+  &nbsp;
+  <img src="docs/badges/react.svg" alt="React 19" height="28" />
+  &nbsp;
+  <img src="docs/badges/typescript.svg" alt="TypeScript 5" height="28" />
+  &nbsp;
+  <img src="docs/badges/tailwind.svg" alt="Tailwind CSS 4" height="28" />
+  &nbsp;
+  <img src="docs/badges/supabase.svg" alt="Supabase" height="28" />
+  &nbsp;
+  <img src="docs/badges/i18n.svg" alt="i18n AR EN" height="28" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/License-Private-blue?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/badge/Locales-Arabic_%7C_English-2ea44f?style=flat-square" alt="Locales" />
-  <img src="https://img.shields.io/badge/Quran-Tanzil_Uthmani-0F7A52?style=flat-square" alt="Quran Source" />
-  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square" alt="Status" />
+  <img src="docs/badges/license.svg" alt="License Private" height="22" />
+  &nbsp;
+  <img src="docs/badges/locales.svg" alt="Locales Arabic English" height="22" />
+  &nbsp;
+  <img src="docs/badges/quran.svg" alt="Quran Tanzil Uthmani" height="22" />
+  &nbsp;
+  <img src="docs/badges/status.svg" alt="Status Active" height="22" />
 </p>
-
-**Stack at a glance:** `Next.js 16` · `React 19` · `TypeScript 5` · `Tailwind CSS 4` · `Supabase` · `next-intl (AR | EN)`
 
 ---
 
@@ -103,6 +109,7 @@ quran-project/
 │   └── auth/              # Auth confirm callback
 ├── components/            # UI by domain (quran, memorization, review, home, …)
 ├── data/                  # Trusted Quran datasets (do not modify casually)
+├── docs/badges/           # README badge SVGs (served from this repo)
 ├── i18n/                  # Routing + next-intl wiring
 ├── lib/                   # Domain helpers + Supabase clients + auth
 ├── messages/              # ar.json · en.json
