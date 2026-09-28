@@ -152,7 +152,7 @@
     },
     "adhkar": {
       "title": "Adhkar",
-      "description": "Morning and evening remembrance will appear here."
+      "description": "Morning and evening remembrances and daily duas."
     }
   },
   "Favorites": {
@@ -323,6 +323,101 @@
       "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — Review does not create them.",
       "notFound": "That review item was not found.",
       "notDue": "This unit is not due for review yet."
+    }
+  },
+  "Tafsir": {
+    "action": "Tafsir",
+    "title": "Ayah Tafsir",
+    "subtitle": "Surah {surahName} · Ayah {ayahNumber}",
+    "sectionLabel": "Tafsir",
+    "source": "Source: {name}",
+    "loading": "Loading tafsir...",
+    "error": "Tafsir could not be loaded right now.",
+    "retry": "Try again",
+    "close": "Close",
+    "mushaf": {
+      "actionHint": "Save your place, manage Favorites, open Tafsir, listen, or add a memorization unit."
+    }
+  },
+  "Audio": {
+    "listen": "Listen",
+    "pageTitle": "Listen to the Quran",
+    "pageSubtitle": "Choose a Surah, ayah, and reciter. Playback uses your selected ayah only — Next and Previous move through the local Mushaf order.",
+    "playerLabel": "Quran audio player",
+    "nowPlaying": "{surahName} · Ayah {ayahNumber}",
+    "loading": "Loading audio…",
+    "play": "Play",
+    "pause": "Pause",
+    "next": "Next ayah",
+    "previous": "Previous ayah",
+    "seek": "Seek",
+    "volume": "Volume",
+    "reciterLabel": "Reciter",
+    "surahLabel": "Surah",
+    "ayahLabel": "Ayah",
+    "startListening": "Start listening",
+    "current": "Now playing",
+    "error": "Audio could not be loaded right now.",
+    "retry": "Try again",
+    "close": "Close"
+  },
+  "Adhkar": {
+    "title": "Adhkar",
+    "subtitle": "Remembrances and duas from Hisnul Muslim, available offline in this app.",
+    "attribution": "Content basis: {source} — {author}.",
+    "verificationNote": "This collection is imported from a third-party Hisnul Muslim catalog and is not independently religiously verified by Quran Companion.",
+    "back": "Back to Adhkar",
+    "featured": {
+      "heading": "Daily remembrances",
+      "collectionCount": "{count} categories",
+      "morning": {
+        "title": "Morning Adhkar",
+        "description": "Morning remembrances from the morning & evening chapter."
+      },
+      "evening": {
+        "title": "Evening Adhkar",
+        "description": "Evening remembrances from the morning & evening chapter."
+      },
+      "sleep": {
+        "title": "Before sleep",
+        "description": "What to say before sleeping."
+      },
+      "waking": {
+        "title": "Upon waking",
+        "description": "Remembrances when waking from sleep."
+      },
+      "afterPrayer": {
+        "title": "After prayer",
+        "description": "Remembrances after the salaam of prayer."
+      },
+      "general": {
+        "title": "General duas & adhkar",
+        "description": "Browse the complete Hisnul Muslim collection."
+      }
+    },
+    "all": {
+      "heading": "Complete collection",
+      "description": "All imported Hisnul Muslim categories."
+    },
+    "category": {
+      "count": "{count, plural, one {# remembrance} other {# remembrances}}",
+      "empty": "No remembrances in this category.",
+      "morningEveningNote": "In the source catalog, morning and evening remembrances are one chapter (أذكار الصباح والمساء)."
+    },
+    "card": {
+      "number": "Remembrance {number}",
+      "repeatTarget": "Repeat {count}×",
+      "reference": "Reference: {reference}"
+    },
+    "counter": {
+      "increment": "Increment counter",
+      "reset": "Reset",
+      "complete": "Completed"
+    },
+    "search": {
+      "label": "Search adhkar",
+      "placeholder": "Search Arabic text, translation, or category…",
+      "empty": "No matching remembrances."
     }
   }
 }

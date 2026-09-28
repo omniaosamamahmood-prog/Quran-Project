@@ -194,6 +194,28 @@ export const getAyah = cache(
   },
 );
 
+/** Next or previous ayah in Mushaf order, using local quran.json only. */
+export const getAdjacentAyah = cache(
+  (
+    surahNumber: number,
+    ayahNumber: number,
+    direction: "next" | "previous",
+  ): QuranPageAyah | undefined => {
+    const ayahs = getOrderedAyahs();
+    const index = findAyahIndex(ayahs, surahNumber, ayahNumber);
+    if (index === -1) {
+      return undefined;
+    }
+
+    const adjacentIndex = direction === "next" ? index + 1 : index - 1;
+    if (adjacentIndex < 0 || adjacentIndex >= ayahs.length) {
+      return undefined;
+    }
+
+    return ayahs[adjacentIndex];
+  },
+);
+
 /**
  * Inclusive ayah range within one Surah, in Quran order.
  * Returns undefined if the range is invalid or crosses Surah bounds.

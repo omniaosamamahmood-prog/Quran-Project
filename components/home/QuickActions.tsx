@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 
 const ACTIONS = [
   { href: "/quran", key: "read", icon: BookIcon, primary: true },
-  { href: "/quran", key: "listen", icon: HeadphonesIcon, primary: false },
+  { href: "/listen", key: "listen", icon: HeadphonesIcon, primary: false },
   { href: "/memorization", key: "memorize", icon: MemorizeIcon, primary: false },
   { href: "/review", key: "review", icon: ReviewIcon, primary: false },
 ] as const;

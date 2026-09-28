@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/pages/PlaceholderPage";
+import { AdhkarHome } from "@/components/adhkar/AdhkarHome";
 
 export default function AdhkarPage() {
-  return <PlaceholderPage namespace="adhkar" />;
+  return <AdhkarHome />;
 }

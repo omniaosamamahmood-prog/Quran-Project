@@ -79,7 +79,7 @@ export async function Hero() {
               </Link>
 
               <Link
-                href="/quran"
+                href="/listen"
                 className={cn(
                   "inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-white/30 px-7 font-medium text-white transition-colors hover:border-white/55 hover:bg-white/10",
                   isArabic ? "text-[0.9375rem]" : "text-sm",

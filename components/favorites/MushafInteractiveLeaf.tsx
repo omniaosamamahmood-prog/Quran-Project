@@ -6,6 +6,8 @@ import { AyahNumber } from "@/components/quran/AyahNumber";
 import { FavoriteToggle } from "@/components/favorites/FavoriteToggle";
 import { MemorizeUnitButton } from "@/components/memorization/MemorizeUnitButton";
 import { SaveReadingPosition } from "@/components/reading-progress/SaveReadingPosition";
+import { ListenAyahButton } from "@/components/audio/ListenAyahButton";
+import { TafsirActionButton } from "@/components/tafsir/TafsirActionButton";
 import { MushafPageFrame } from "@/components/quran/MushafPageFrame";
 import { cn } from "@/lib/cn";
 import { favoriteKey } from "@/types/favorites";
@@ -37,6 +39,7 @@ type SelectedAyah = {
   surahNumber: number;
   surahName: string;
   ayahNumber: number;
+  ayahText: string;
 };
 
 type RangeMode = {
@@ -48,7 +51,7 @@ type RangeMode = {
 /**
  * Mushaf leaf interaction:
  * - Quran text stays non-interactive for calm reading
- * - Tap ayah medallion → shared chrome (Favorites, reading position, memorization units)
+ * - Tap ayah medallion → shared chrome (Favorites, reading position, memorization, Tafsir, Listen)
  * - Optional same-Surah range selection mode
  */
 export function MushafInteractiveLeaf({
@@ -65,6 +68,7 @@ export function MushafInteractiveLeaf({
   const tQuran = useTranslations("Quran");
   const tFavorites = useTranslations("Favorites");
   const tMemorization = useTranslations("Memorization");
+  const tTafsir = useTranslations("Tafsir");
   const [selected, setSelected] = useState<SelectedAyah | null>(null);
   const [rangeMode, setRangeMode] = useState<RangeMode | null>(null);
   const [rangeError, setRangeError] = useState("");
@@ -145,11 +149,13 @@ export function MushafInteractiveLeaf({
         surahNumber: ayah.surahNumber,
         surahName: ayah.surahName,
         ayahNumber: ayah.ayahNumber,
+        ayahText: ayah.text,
       });
       setSelected({
         surahNumber: ayah.surahNumber,
         surahName: ayah.surahName,
         ayahNumber: ayah.ayahNumber,
+        ayahText: ayah.text,
       });
       return;
     }
@@ -158,6 +164,7 @@ export function MushafInteractiveLeaf({
       surahNumber: ayah.surahNumber,
       surahName: ayah.surahName,
       ayahNumber: ayah.ayahNumber,
+      ayahText: ayah.text,
     });
   }
 
@@ -409,7 +416,7 @@ export function MushafInteractiveLeaf({
                 })}
               </p>
               <p className="mt-0.5 text-xs text-muted">
-                {tMemorization("mushaf.actionHint")}
+                {tTafsir("mushaf.actionHint")}
               </p>
             </div>
 
@@ -443,6 +450,18 @@ export function MushafInteractiveLeaf({
                     [key]: favorited,
                   }));
                 }}
+              />
+              <TafsirActionButton
+                key={`tafsir-${selected.surahNumber}-${selected.ayahNumber}`}
+                surahNumber={selected.surahNumber}
+                ayahNumber={selected.ayahNumber}
+                surahName={selected.surahName}
+                ayahText={selected.ayahText}
+              />
+              <ListenAyahButton
+                key={`listen-${selected.surahNumber}-${selected.ayahNumber}`}
+                surahNumber={selected.surahNumber}
+                ayahNumber={selected.ayahNumber}
               />
               <MemorizeUnitButton
                 key={`ayah-${ayahIdentity}`}

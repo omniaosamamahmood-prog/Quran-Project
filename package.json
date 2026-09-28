@@ -7,15 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "convert:quran": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/convert-quran.ts"
+    "convert:quran": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/convert-quran.ts",
+    "import:adhkar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/import-adhkar.ts"
   },
   "dependencies": {
+    "@quranjs/api": "^3.10.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.116.0",
     "next": "16.3.5",
     "next-intl": "^4.14.5",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

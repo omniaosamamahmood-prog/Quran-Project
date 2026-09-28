@@ -8,6 +8,8 @@ import Navbar from "@/components/layout/Navbar";
 import MobileNavigation from "@/components/layout/MobileNavigation";
 import { MainChrome } from "@/components/layout/MainChrome";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { AudioProvider } from "@/components/audio/AudioProvider";
+import { GlobalAudioPlayer } from "@/components/audio/GlobalAudioPlayer";
 import {
   amiriQuran,
   ibmPlexSansArabic,
@@ -82,15 +84,18 @@ export default async function LocaleLayout({ children, params }: Props) {
     >
       <body className="min-h-dvh">
         <NextIntlClientProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-emerald focus:px-3 focus:py-2 focus:text-white"
-          >
-            {t("skipToContent")}
-          </a>
-          <Navbar user={navbarUser} />
-          <MainChrome footer={<SiteFooter />}>{children}</MainChrome>
-          <MobileNavigation />
+          <AudioProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-emerald focus:px-3 focus:py-2 focus:text-white"
+            >
+              {t("skipToContent")}
+            </a>
+            <Navbar user={navbarUser} />
+            <MainChrome footer={<SiteFooter />}>{children}</MainChrome>
+            <GlobalAudioPlayer />
+            <MobileNavigation />
+          </AudioProvider>
         </NextIntlClientProvider>
       </body>
     </html>
