@@ -127,6 +127,22 @@ function readStoredReciter(): string {
 export function AudioProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const requestIdRef = useRef(0);
+  const trackRef = useRef<AyahAudioPayload | null>(null);
+  const reciterIdRef = useRef(DEFAULT_RECITER_ID);
+  /** True only after the user has explicitly started playback this session. */
+  const continuousEnabledRef = useRef(false);
+  /** Guards against duplicate `ended` → next-ayah races. */
+  const advancingRef = useRef(false);
+  const loadAndMaybePlayRef = useRef<
+    | ((
+        surahNumber: number,
+        ayahNumber: number,
+        selectedReciterId: string,
+        autoplay: boolean,
+      ) => Promise<void>)
+    | null
+  >(null);
+
   const [status, setStatus] = useState<PlaybackStatus>("idle");
   const [track, setTrack] = useState<AyahAudioPayload | null>(null);
   const [reciterId, setReciterIdState] = useState(DEFAULT_RECITER_ID);
@@ -144,6 +160,14 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    trackRef.current = track;
+  }, [track]);
+
+  useEffect(() => {
+    reciterIdRef.current = reciterId;
+  }, [reciterId]);
+
+  useEffect(() => {
     const audio = new Audio();
     audio.preload = "metadata";
     audioRef.current = audio;
@@ -159,8 +183,60 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       }
     };
     const onEnded = () => {
-      setStatus("paused");
       setCurrentTime(0);
+
+      if (!continuousEnabledRef.current) {
+        setStatus("paused");
+        return;
+      }
+
+      if (advancingRef.current) {
+        return;
+      }
+
+      const current = trackRef.current;
+      if (!current) {
+        setStatus("paused");
+        return;
+      }
+
+      advancingRef.current = true;
+      setStatus("loading");
+
+      void (async () => {
+        try {
+          const adjacent = await fetchAdjacent(
+            current.surahNumber,
+            current.ayahNumber,
+            "next",
+          );
+
+          // Final ayah of the Quran (e.g. 114:6) — stop normally, no wrap.
+          if (!adjacent) {
+            setStatus("paused");
+            return;
+          }
+
+          const load = loadAndMaybePlayRef.current;
+          if (!load) {
+            setStatus("error");
+            setErrorMessage("Audio could not be loaded right now.");
+            return;
+          }
+
+          await load(
+            adjacent.surahNumber,
+            adjacent.ayahNumber,
+            reciterIdRef.current,
+            true,
+          );
+        } catch {
+          setStatus("error");
+          setErrorMessage("Audio could not be loaded right now.");
+        } finally {
+          advancingRef.current = false;
+        }
+      })();
     };
     const onError = () => {
       setStatus("error");
@@ -229,6 +305,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       }
 
       setTrack(result.data);
+      trackRef.current = result.data;
       void refreshAdjacent(result.data.surahNumber, result.data.ayahNumber);
 
       audio.src = result.data.audioUrl;
@@ -253,12 +330,19 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     [refreshAdjacent],
   );
 
+  useEffect(() => {
+    loadAndMaybePlayRef.current = loadAndMaybePlay;
+  }, [loadAndMaybePlay]);
+
   const playAyah = useCallback(
     async (input: {
       surahNumber: number;
       ayahNumber: number;
       autoplay?: boolean;
     }) => {
+      if (input.autoplay !== false) {
+        continuousEnabledRef.current = true;
+      }
       await loadAndMaybePlay(
         input.surahNumber,
         input.ayahNumber,
@@ -274,6 +358,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resume = useCallback(() => {
+    continuousEnabledRef.current = true;
     void audioRef.current?.play().catch(() => {
       setStatus("error");
       setErrorMessage("Audio could not be loaded right now.");
@@ -311,6 +396,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         return;
       }
       setReciterIdState(nextId);
+      reciterIdRef.current = nextId;
       try {
         window.localStorage.setItem(RECITER_STORAGE_KEY, nextId);
       } catch {
@@ -330,6 +416,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const playNext = useCallback(async () => {
     if (!track) return;
+    continuousEnabledRef.current = true;
     const adjacent = await fetchAdjacent(
       track.surahNumber,
       track.ayahNumber,
@@ -346,6 +433,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const playPrevious = useCallback(async () => {
     if (!track) return;
+    continuousEnabledRef.current = true;
     const adjacent = await fetchAdjacent(
       track.surahNumber,
       track.ayahNumber,
@@ -362,6 +450,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const retry = useCallback(async () => {
     if (!track) return;
+    continuousEnabledRef.current = true;
     await loadAndMaybePlay(
       track.surahNumber,
       track.ayahNumber,
@@ -372,12 +461,15 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const dismiss = useCallback(() => {
     requestIdRef.current += 1;
+    continuousEnabledRef.current = false;
+    advancingRef.current = false;
     audioRef.current?.pause();
     if (audioRef.current) {
       audioRef.current.removeAttribute("src");
       audioRef.current.load();
     }
     setTrack(null);
+    trackRef.current = null;
     setStatus("idle");
     setCurrentTime(0);
     setDuration(0);

@@ -42,9 +42,9 @@
         "title": "Memorize",
         "description": "Continue your memorization"
       },
-      "review": {
-        "title": "Review",
-        "description": "Strengthen what you have learned"
+      "adhkar": {
+        "title": "Adhkar",
+        "description": "Morning and evening remembrance"
       }
     },
     "continueReading": {
@@ -52,22 +52,48 @@
       "emptyTitle": "No saved place yet",
       "emptyDescription": "Begin from the mushaf and save your place from the reader.",
       "emptyDescriptionSignedIn": "Select an ayah in the mushaf and save your reading position to see it here.",
+      "errorTitle": "Reading place unavailable",
+      "errorDescription": "Your saved place could not be loaded. You can still open the mushaf.",
       "action": "Start reading",
       "surahLabel": "Surah {name}",
       "positionMeta": "Page {page} • Ayah {ayah}",
-      "resumeAction": "Continue Reading"
+      "resumeAction": "Continue Reading",
+      "factSurahs": "Surahs",
+      "factPages": "Pages",
+      "factStart": "Begins at",
+      "factSurah": "Surah",
+      "factPage": "Page",
+      "factAyah": "Ayah"
     },
-    "dailyJourney": {
-      "title": "Your daily journey",
-      "description": "Small steps make a lasting difference"
+    "todaysReviews": {
+      "title": "Today's Reviews",
+      "due": "{count, plural, one {# review due today} other {# reviews due today}}",
+      "dueDescription": "These units are ready in your review session.",
+      "caughtUpTitle": "Nothing due right now",
+      "caughtUpDescription": "You are up to date. Upcoming reviews stay on the review page.",
+      "emptyTitle": "No reviews yet",
+      "emptyDescription": "Reviews appear after you mark a unit as memorized.",
+      "guestTitle": "Review what you memorize",
+      "guestDescription": "Your due reviews appear here after you sign in.",
+      "guestCta": "Open reviews",
+      "startCta": "Start review",
+      "openCta": "Open reviews",
+      "errorTitle": "Reviews unavailable",
+      "errorDescription": "Today's reviews could not be loaded."
     },
     "memorizationProgress": {
       "title": "Memorization",
-      "description": "Keep track of your memorization"
-    },
-    "adhkar": {
-      "title": "Adhkar",
-      "description": "Morning and evening remembrance, close at hand"
+      "description": "Keep track of your memorization",
+      "guestDescription": "Sign in to see the units you are learning and have memorized.",
+      "emptyDescription": "Save an ayah, a range, or a page from the mushaf to begin.",
+      "errorDescription": "Memorization progress could not be loaded.",
+      "memorizedLabel": "Memorized",
+      "learningLabel": "Learning",
+      "none": "None yet",
+      "ayahCount": "{count, plural, one {# ayah} other {# ayahs}}",
+      "rangeCount": "{count, plural, one {# range} other {# ranges}}",
+      "pageCount": "{count, plural, one {# page} other {# pages}}",
+      "cta": "Open memorization"
     }
   },
   "Quran": {
@@ -78,6 +104,48 @@
     "empty": "No surah matches your search",
     "surahUnit": "{count, plural, one {surah} other {surahs}}",
     "ayahUnit": "{count, plural, one {ayah} other {ayahs}}",
+    "browseLabel": "Browse the Quran",
+    "tabSurahs": "Surahs",
+    "tabJuz": "Juz",
+    "juzSubtitle": "Choose a Juz and start reading",
+    "juzUnit": "{count, plural, one {juz} other {juz}}",
+    "juzSearchLabel": "Search for a Juz",
+    "juzSearchPlaceholder": "Search by number or name...",
+    "juzEmpty": "No juz matches your search",
+    "juzAyah": "Ayah {ayah}",
+    "juzPage": "Page {page}",
+    "juzName": {
+      "1": "Juz 1",
+      "2": "Juz 2",
+      "3": "Juz 3",
+      "4": "Juz 4",
+      "5": "Juz 5",
+      "6": "Juz 6",
+      "7": "Juz 7",
+      "8": "Juz 8",
+      "9": "Juz 9",
+      "10": "Juz 10",
+      "11": "Juz 11",
+      "12": "Juz 12",
+      "13": "Juz 13",
+      "14": "Juz 14",
+      "15": "Juz 15",
+      "16": "Juz 16",
+      "17": "Juz 17",
+      "18": "Juz 18",
+      "19": "Juz 19",
+      "20": "Juz 20",
+      "21": "Juz 21",
+      "22": "Juz 22",
+      "23": "Juz 23",
+      "24": "Juz 24",
+      "25": "Juz 25",
+      "26": "Juz 26",
+      "27": "Juz 27",
+      "28": "Juz 28",
+      "29": "Juz 29",
+      "30": "Juz 30"
+    },
     "reader": {
       "backToList": "Back to surahs",
       "surahNumber": "Surah {number}",
@@ -88,7 +156,11 @@
       "surahTitle": "Surah {name}",
       "previous": "Previous",
       "next": "Next",
-      "navigation": "Mushaf page navigation"
+      "navigation": "Mushaf page navigation",
+      "rubMarker": "Rubʿ al-Hizb, Hizb {hizb}, quarter {quarter}",
+      "hizb": "Hizb {number}",
+      "locationQuarter": "Quarter {quarter}",
+      "locationPage": "Page {page}"
     }
   },
   "Footer": {

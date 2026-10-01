@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AyahNumber } from "@/components/quran/AyahNumber";
+import { RubAlHizbMarker } from "@/components/quran/RubAlHizbMarker";
 import { FavoriteToggle } from "@/components/favorites/FavoriteToggle";
 import { MemorizeUnitButton } from "@/components/memorization/MemorizeUnitButton";
 import { SaveReadingPosition } from "@/components/reading-progress/SaveReadingPosition";
@@ -15,7 +16,7 @@ import {
   ayahMembershipKey,
   memorizationUnitIdentity,
 } from "@/types/memorization";
-import type { QuranPageAyah } from "@/types/quran";
+import type { QuranPageAyah, RubAyahMarker } from "@/types/quran";
 
 type SurahSegment = {
   surahNumber: number;
@@ -33,6 +34,8 @@ type MushafInteractiveLeafProps = {
   initialMemorizationUnitIds: string[];
   isAuthenticated: boolean;
   returnPath: string;
+  /** Rubʿ starts on this page only. Empty when the page has none. */
+  rubMarkers: RubAyahMarker[];
 };
 
 type SelectedAyah = {
@@ -64,6 +67,7 @@ export function MushafInteractiveLeaf({
   initialMemorizationUnitIds,
   isAuthenticated,
   returnPath,
+  rubMarkers,
 }: MushafInteractiveLeafProps) {
   const tQuran = useTranslations("Quran");
   const tFavorites = useTranslations("Favorites");
@@ -290,11 +294,25 @@ export function MushafInteractiveLeaf({
                         ayah.ayahNumber,
                       );
 
+                      const rub = rubMarkers.find(
+                        (marker) =>
+                          marker.surahNumber === ayah.surahNumber &&
+                          marker.ayahNumber === ayah.ayahNumber,
+                      );
+
                       return (
                         <span
                           key={`${ayah.surahNumber}:${ayah.ayahNumber}`}
                           id={`ayah-${ayah.surahNumber}-${ayah.ayahNumber}`}
                         >
+                          {rub ? (
+                            <RubAlHizbMarker
+                              label={tQuran("pageReader.rubMarker", {
+                                hizb: rub.hizbNumber,
+                                quarter: rub.quarterInHizb,
+                              })}
+                            />
+                          ) : null}
                           {ayah.text}
                           <button
                             type="button"

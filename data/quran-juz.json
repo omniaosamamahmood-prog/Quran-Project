@@ -1,0 +1,164 @@
+{
+  "source": {
+    "name": "Tanzil Quran Metadata",
+    "file": "quran-data.xml",
+    "version": "1.0",
+    "copyright": "(C) 2008-2009 Tanzil.info",
+    "license": "cc-by",
+    "canonicalUrl": "https://tanzil.net/res/text/metadata/quran-data.xml",
+    "retrievedFrom": "https://tanzil.ir/res/text/metadata/quran-data.xml",
+    "note": "Juz start positions copied from the <juzs> partition (index, sura, aya). Medina Mushaf pages are not stored; resolve them from data/quran-pages.json."
+  },
+  "juzs": [
+    {
+      "number": 1,
+      "startSurah": 1,
+      "startAyah": 1
+    },
+    {
+      "number": 2,
+      "startSurah": 2,
+      "startAyah": 142
+    },
+    {
+      "number": 3,
+      "startSurah": 2,
+      "startAyah": 253
+    },
+    {
+      "number": 4,
+      "startSurah": 3,
+      "startAyah": 93
+    },
+    {
+      "number": 5,
+      "startSurah": 4,
+      "startAyah": 24
+    },
+    {
+      "number": 6,
+      "startSurah": 4,
+      "startAyah": 148
+    },
+    {
+      "number": 7,
+      "startSurah": 5,
+      "startAyah": 82
+    },
+    {
+      "number": 8,
+      "startSurah": 6,
+      "startAyah": 111
+    },
+    {
+      "number": 9,
+      "startSurah": 7,
+      "startAyah": 88
+    },
+    {
+      "number": 10,
+      "startSurah": 8,
+      "startAyah": 41
+    },
+    {
+      "number": 11,
+      "startSurah": 9,
+      "startAyah": 93
+    },
+    {
+      "number": 12,
+      "startSurah": 11,
+      "startAyah": 6
+    },
+    {
+      "number": 13,
+      "startSurah": 12,
+      "startAyah": 53
+    },
+    {
+      "number": 14,
+      "startSurah": 15,
+      "startAyah": 1
+    },
+    {
+      "number": 15,
+      "startSurah": 17,
+      "startAyah": 1
+    },
+    {
+      "number": 16,
+      "startSurah": 18,
+      "startAyah": 75
+    },
+    {
+      "number": 17,
+      "startSurah": 21,
+      "startAyah": 1
+    },
+    {
+      "number": 18,
+      "startSurah": 23,
+      "startAyah": 1
+    },
+    {
+      "number": 19,
+      "startSurah": 25,
+      "startAyah": 21
+    },
+    {
+      "number": 20,
+      "startSurah": 27,
+      "startAyah": 56
+    },
+    {
+      "number": 21,
+      "startSurah": 29,
+      "startAyah": 46
+    },
+    {
+      "number": 22,
+      "startSurah": 33,
+      "startAyah": 31
+    },
+    {
+      "number": 23,
+      "startSurah": 36,
+      "startAyah": 28
+    },
+    {
+      "number": 24,
+      "startSurah": 39,
+      "startAyah": 32
+    },
+    {
+      "number": 25,
+      "startSurah": 41,
+      "startAyah": 47
+    },
+    {
+      "number": 26,
+      "startSurah": 46,
+      "startAyah": 1
+    },
+    {
+      "number": 27,
+      "startSurah": 51,
+      "startAyah": 31
+    },
+    {
+      "number": 28,
+      "startSurah": 58,
+      "startAyah": 1
+    },
+    {
+      "number": 29,
+      "startSurah": 67,
+      "startAyah": 1
+    },
+    {
+      "number": 30,
+      "startSurah": 78,
+      "startAyah": 1
+    }
+  ]
+}

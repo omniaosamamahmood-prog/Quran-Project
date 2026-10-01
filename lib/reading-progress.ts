@@ -1,18 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ReadingProgressRow } from "@/types/reading-progress";
 
+export type ReadingProgressResult =
+  | { status: "empty" }
+  | { status: "ready"; progress: ReadingProgressRow }
+  | { status: "error" };
+
 /**
- * Authenticated user's single reading position, or null for guests / no row.
- * Never invents progress. Does not touch public.profiles.
+ * Authenticated user's single reading position.
+ * Empty for guests and for users with no row. Never invents progress.
+ * Does not touch public.profiles.
  */
-export async function getReadingProgress(): Promise<ReadingProgressRow | null> {
+export async function getReadingProgress(): Promise<ReadingProgressResult> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return null;
+    return { status: "empty" };
   }
 
   const { data, error } = await supabase
@@ -21,9 +27,13 @@ export async function getReadingProgress(): Promise<ReadingProgressRow | null> {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (error || !data) {
-    return null;
+  if (error) {
+    return { status: "error" };
   }
 
-  return data as ReadingProgressRow;
+  if (!data) {
+    return { status: "empty" };
+  }
+
+  return { status: "ready", progress: data as ReadingProgressRow };
 }

@@ -185,9 +185,9 @@ export async function deleteReviewScheduleForMemorization(
   return { ok: true };
 }
 
-async function listReviewSchedules(options?: {
+async function loadReviewSchedules(options?: {
   skipEnsure?: boolean;
-}): Promise<ReviewScheduleItem[]> {
+}): Promise<{ ok: true; items: ReviewScheduleItem[] } | { ok: false }> {
   if (!options?.skipEnsure) {
     await ensureReviewSchedulesForMemorized();
   }
@@ -198,7 +198,7 @@ async function listReviewSchedules(options?: {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return [];
+    return { ok: true, items: [] };
   }
 
   const { data, error } = await supabase
@@ -231,12 +231,44 @@ async function listReviewSchedules(options?: {
     .order("next_review_at", { ascending: true });
 
   if (error || !data) {
-    return [];
+    return { ok: false };
   }
 
-  return (data as ReviewWithMemorization[])
-    .map(toScheduleItem)
-    .filter((item): item is ReviewScheduleItem => item !== null);
+  return {
+    ok: true,
+    items: (data as ReviewWithMemorization[])
+      .map(toScheduleItem)
+      .filter((item): item is ReviewScheduleItem => item !== null),
+  };
+}
+
+/** Existing callers keep an empty list when the query fails. */
+async function listReviewSchedules(options?: {
+  skipEnsure?: boolean;
+}): Promise<ReviewScheduleItem[]> {
+  const result = await loadReviewSchedules(options);
+  return result.ok ? result.items : [];
+}
+
+/**
+ * Due-now count for Home. Pass skipEnsure so Home never inserts review rows.
+ * dueNow matches the review session (`next_review_at <= now`).
+ */
+export async function getDueReviewSnapshot(options?: {
+  skipEnsure?: boolean;
+}): Promise<
+  { ok: true; dueNow: number; scheduled: number } | { ok: false }
+> {
+  const result = await loadReviewSchedules(options);
+  if (!result.ok) {
+    return { ok: false };
+  }
+
+  return {
+    ok: true,
+    dueNow: summarizeReviewCounts(result.items).dueNow,
+    scheduled: result.items.length,
+  };
 }
 
 /** Due for a review session: next_review_at <= now. */

@@ -8,7 +8,11 @@ import {
   getMemorizationKeySet,
   getMemorizationUnitIdentitySet,
 } from "@/lib/memorization";
-import { getMushafPageCount } from "@/lib/quran";
+import {
+  getMushafPageCount,
+  getRubForAyah,
+  getRubMarkersForAyahs,
+} from "@/lib/quran";
 import { createClient } from "@/lib/supabase/server";
 import type { QuranPage, QuranPageAyah } from "@/types/quran";
 
@@ -61,6 +65,24 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
     0,
   );
   const isCompact = pageCharCount > 1450;
+  const firstAyah = page.ayahs[0];
+  const section = firstAyah
+    ? getRubForAyah(firstAyah.surahNumber, firstAyah.ayahNumber)
+    : undefined;
+  const location = section
+    ? [
+        t(`juzName.${section.juzNumber}`),
+        isArabic
+          ? t(`hizbName.${section.hizbNumber}`)
+          : t("pageReader.hizb", { number: section.hizbNumber }),
+        t("pageReader.locationQuarter", { quarter: section.quarterInHizb }),
+        t("pageReader.locationPage", {
+          page: isArabic
+            ? toEasternDigits(page.pageNumber)
+            : page.pageNumber,
+        }),
+      ].join(" • ")
+    : null;
 
   const supabase = await createClient();
   const {
@@ -143,6 +165,7 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
               initialMemorizationUnitIds={memorizationUnitIds}
               isAuthenticated={isAuthenticated}
               returnPath={`/quran/page/${page.pageNumber}`}
+              rubMarkers={getRubMarkersForAyahs(page.ayahs)}
             />
           </div>
 
@@ -154,13 +177,14 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
         <p
           className={cn(
             "mushaf-reader-indicator text-center text-sm text-muted",
-            isArabic && "leading-relaxed",
+            isArabic && "font-naskh leading-relaxed",
           )}
         >
-          {t("pageReader.indicator", {
-            current: page.pageNumber,
-            total: totalPages,
-          })}
+          {location ??
+            t("pageReader.indicator", {
+              current: page.pageNumber,
+              total: totalPages,
+            })}
         </p>
 
         <nav

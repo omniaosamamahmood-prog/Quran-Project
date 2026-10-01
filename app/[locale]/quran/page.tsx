@@ -1,15 +1,16 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { SurahList } from "@/components/quran/SurahList";
+import { QuranCatalog } from "@/components/quran/QuranCatalog";
 import { Container } from "@/components/ui/Container";
-import { getSurahSummaries } from "@/lib/quran";
+import { getJuzSummaries, getSurahSummaries } from "@/lib/quran";
 import { cn } from "@/lib/cn";
 
 export default async function QuranPage() {
   const t = await getTranslations("Quran");
   const isArabic = (await getLocale()) === "ar";
 
-  // Read server-side; only number/name/ayahCount/firstPage crosses to the client.
+  // Read server-side. Only summaries cross to the client — never ayah text.
   const surahs = getSurahSummaries();
+  const juzs = getJuzSummaries();
 
   return (
     <main id="main" className="py-10 sm:py-14">
@@ -25,16 +26,9 @@ export default async function QuranPage() {
           >
             {t("title")}
           </h1>
-
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-            <p className="text-sm text-muted sm:text-base">{t("subtitle")}</p>
-            <span className="inline-flex items-center rounded-full border border-line bg-surface px-2.5 py-0.5 text-[0.75rem] text-muted">
-              {surahs.length} {t("surahUnit", { count: surahs.length })}
-            </span>
-          </div>
         </header>
 
-        <SurahList surahs={surahs} />
+        <QuranCatalog surahs={surahs} juzs={juzs} />
       </Container>
     </main>
   );

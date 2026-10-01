@@ -45,14 +45,16 @@ const MEMORIZATION_SELECT =
  * Authenticated user's memorization units, newest-first.
  * Empty for guests. Never invents rows. Does not touch public.profiles.
  */
-export async function listMemorizations(): Promise<MemorizationRow[]> {
+export async function loadMemorizationRows(): Promise<
+  { ok: true; rows: MemorizationRow[] } | { ok: false }
+> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return [];
+    return { ok: true, rows: [] };
   }
 
   const { data, error } = await supabase
@@ -62,10 +64,20 @@ export async function listMemorizations(): Promise<MemorizationRow[]> {
     .order("updated_at", { ascending: false });
 
   if (error || !data) {
-    return [];
+    return { ok: false };
   }
 
-  return data as MemorizationRow[];
+  return { ok: true, rows: data as MemorizationRow[] };
+}
+
+/**
+ * Authenticated user's memorization units, newest-first.
+ * Empty for guests and when the query fails. Never invents rows.
+ * Does not touch public.profiles.
+ */
+export async function listMemorizations(): Promise<MemorizationRow[]> {
+  const result = await loadMemorizationRows();
+  return result.ok ? result.rows : [];
 }
 
 /**

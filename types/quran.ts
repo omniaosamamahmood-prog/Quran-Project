@@ -57,6 +57,64 @@ export type SurahSummary = {
   /** Mushaf page that contains ayah 1 of this Surah. */
   firstPage: number;
 };
+
+/**
+ * One Juz start copied from Tanzil `quran-data.xml` (`<juz index sura aya>`).
+ * Stored in `data/quran-juz.json`. Page numbers are not part of this record.
+ */
+export type JuzBoundary = {
+  number: number;
+  startSurah: number;
+  startAyah: number;
+};
+
+/**
+ * Juz listing metadata. `startPage` is resolved from `data/quran-pages.json`
+ * for the boundary ayah — it is not stored in the Juz file.
+ */
+export type JuzSummary = {
+  number: number;
+  startSurah: number;
+  startAyah: number;
+  startPage: number;
+};
+
+/**
+ * One `<quarter index sura aya>` copied from Tanzil `<hizbs alias="groups">`.
+ * `index` is the source's global quarter number. Stored in `data/quran-rub.json`.
+ */
+export type RubQuarterSource = {
+  index: number;
+  startSurah: number;
+  startAyah: number;
+};
+
+/** Quarter position inside one Hizb, derived from the global Tanzil index. */
+export type RubQuarterInHizb = 1 | 2 | 3 | 4;
+
+/**
+ * One Rubʿ al-Hizb start. `startPage` is resolved from `quran-pages.json`.
+ * `hizbNumber`, `quarterInHizb`, and `juzNumber` are derived from `rubNumber`
+ * and checked against the local Juz starts — they are not separate XML fields.
+ */
+export type RubBoundary = {
+  /** Tanzil `<quarter index>`, 1-based across the whole Quran. */
+  rubNumber: number;
+  hizbNumber: number;
+  quarterInHizb: RubQuarterInHizb;
+  juzNumber: number;
+  startSurah: number;
+  startAyah: number;
+  startPage: number;
+};
+
+/** Marker metadata for one ayah on a Mushaf page. No Quran text. */
+export type RubAyahMarker = {
+  surahNumber: number;
+  ayahNumber: number;
+  hizbNumber: number;
+  quarterInHizb: RubQuarterInHizb;
+};
 export type QuranPageStart = {
   page: number;
   sura: number;
