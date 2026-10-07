@@ -11,5 +11,7 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  // `auth/` stays outside next-intl. Otherwise `/auth/callback` is redirected
+  // to `/{locale}/auth/callback` and the OAuth code exchange never runs.
+  matcher: "/((?!api|trpc|_next|_vercel|auth/|.*\\..*).*)",
 };

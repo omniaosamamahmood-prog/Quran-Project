@@ -1,11 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { Container } from "@/components/ui/Container";
 import { UserIcon } from "@/components/ui/icons";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import {
+  InstallInstructionsDialog,
+  InstallMobileBar,
+  InstallNavbarButton,
+} from "@/components/pwa/InstallAppButton";
 import { cn } from "@/lib/cn";
 import { NAV_ITEMS, isNavActive } from "@/lib/nav";
 import { supabase } from "@/lib/supabase/client";
@@ -15,17 +21,49 @@ export type NavbarUser = {
   email: string | null;
 } | null;
 
-type NavbarProps = {
-  user: NavbarUser;
-};
+function accountUser(
+  user: {
+    email?: string | null;
+    user_metadata?: { full_name?: unknown };
+  } | null,
+): NavbarUser {
+  if (!user) return null;
+  return {
+    fullName:
+      typeof user.user_metadata?.full_name === "string"
+        ? user.user_metadata.full_name
+        : null,
+    email: user.email ?? null,
+  };
+}
 
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar() {
   const t = useTranslations("Navigation");
   const tBrand = useTranslations("Brand");
   const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
   const isArabic = locale === "ar";
+  const [user, setUser] = useState<NavbarUser>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    void supabase.auth.getUser().then(({ data }) => {
+      if (active) setUser(accountUser(data.user));
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(accountUser(session?.user ?? null));
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const displayName = user?.fullName?.trim() || user?.email || null;
 
@@ -36,6 +74,7 @@ export default function Navbar({ user }: NavbarProps) {
   }
 
   return (
+    <>
     <header className="sticky top-0 z-40 border-b border-line bg-surface/92 backdrop-blur-md">
       <Container className="flex h-[4.25rem] items-center gap-4">
         <Link href="/" className="flex min-w-0 items-center gap-3">
@@ -89,6 +128,7 @@ export default function Navbar({ user }: NavbarProps) {
         </nav>
 
         <div className="flex flex-1 shrink-0 items-center justify-end gap-2 lg:flex-none">
+          <InstallNavbarButton />
           <LanguageSwitcher />
 
           {user ? (
@@ -121,6 +161,9 @@ export default function Navbar({ user }: NavbarProps) {
           )}
         </div>
       </Container>
+      <InstallMobileBar />
     </header>
+    <InstallInstructionsDialog />
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { MemorizeIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import { supabase } from "@/lib/supabase/client";
+import { isDeviceOffline } from "@/lib/pwa/offline";
 import type { MemorizationUnitType } from "@/types/memorization";
 
 type UnitPayload =
@@ -153,7 +154,6 @@ type MemorizeUnitButtonProps = {
   pendingLabel: string;
   payload: UnitPayload;
   alreadyAdded: boolean;
-  isAuthenticated: boolean;
   returnPath: string;
   className?: string;
   onAdded?: () => void;
@@ -164,7 +164,6 @@ export function MemorizeUnitButton({
   pendingLabel,
   payload,
   alreadyAdded,
-  isAuthenticated,
   returnPath,
   className,
   onAdded,
@@ -195,19 +194,29 @@ export function MemorizeUnitButton({
     setError("");
     setDiagnostic("");
 
-    if (!isAuthenticated) {
-      redirectToLogin();
-      return;
-    }
-
     if (added) {
       return;
     }
 
+    if (isDeviceOffline()) {
+      setError(t("errors.offline"));
+      return;
+    }
+
     startTransition(async () => {
-      const result = await addMemorizationUnitClient(payload);
+      let result: Awaited<ReturnType<typeof addMemorizationUnitClient>>;
+      try {
+        result = await addMemorizationUnitClient(payload);
+      } catch {
+        setError(isDeviceOffline() ? t("errors.offline") : t("errors.addFailed"));
+        return;
+      }
 
       if (!result.ok) {
+        if (isDeviceOffline()) {
+          setError(t("errors.offline"));
+          return;
+        }
         if (result.error === "auth_required") {
           redirectToLogin();
           return;

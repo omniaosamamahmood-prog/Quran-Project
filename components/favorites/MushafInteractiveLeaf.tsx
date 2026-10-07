@@ -1,19 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AyahNumber } from "@/components/quran/AyahNumber";
 import { RubAlHizbMarker } from "@/components/quran/RubAlHizbMarker";
 import { FavoriteToggle } from "@/components/favorites/FavoriteToggle";
+import { loadSessionFavoriteKeys } from "@/components/favorites/session-favorites";
 import { MemorizeUnitButton } from "@/components/memorization/MemorizeUnitButton";
+import { loadSessionMemorizationRows } from "@/components/memorization/session-memorization";
 import { SaveReadingPosition } from "@/components/reading-progress/SaveReadingPosition";
 import { ListenAyahButton } from "@/components/audio/ListenAyahButton";
+import { useActiveQuranAyah } from "@/components/audio/AudioProvider";
 import { TafsirActionButton } from "@/components/tafsir/TafsirActionButton";
 import { MushafPageFrame } from "@/components/quran/MushafPageFrame";
 import { cn } from "@/lib/cn";
 import { favoriteKey } from "@/types/favorites";
 import {
   ayahMembershipKey,
+  memorizationRowCoversPageAyah,
   memorizationUnitIdentity,
 } from "@/types/memorization";
 import type { QuranPageAyah, RubAyahMarker } from "@/types/quran";
@@ -29,10 +33,6 @@ type MushafInteractiveLeafProps = {
   isCompact: boolean;
   pageNumber: number;
   pageNumberLabel: string;
-  initialFavoriteKeys: string[];
-  initialMemorizationKeys: string[];
-  initialMemorizationUnitIds: string[];
-  isAuthenticated: boolean;
   returnPath: string;
   /** Rubʿ starts on this page only. Empty when the page has none. */
   rubMarkers: RubAyahMarker[];
@@ -62,10 +62,6 @@ export function MushafInteractiveLeaf({
   isCompact,
   pageNumber,
   pageNumberLabel,
-  initialFavoriteKeys,
-  initialMemorizationKeys,
-  initialMemorizationUnitIds,
-  isAuthenticated,
   returnPath,
   rubMarkers,
 }: MushafInteractiveLeafProps) {
@@ -73,39 +69,58 @@ export function MushafInteractiveLeaf({
   const tFavorites = useTranslations("Favorites");
   const tMemorization = useTranslations("Memorization");
   const tTafsir = useTranslations("Tafsir");
+  const activeAyah = useActiveQuranAyah();
   const [selected, setSelected] = useState<SelectedAyah | null>(null);
   const [rangeMode, setRangeMode] = useState<RangeMode | null>(null);
   const [rangeError, setRangeError] = useState("");
   const [pendingRangeEnd, setPendingRangeEnd] = useState<SelectedAyah | null>(
     null,
   );
-  const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>(() => {
-    const map: Record<string, boolean> = {};
-    for (const key of initialFavoriteKeys) {
-      map[key] = true;
-    }
-    return map;
-  });
+  const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [membershipMap, setMembershipMap] = useState<Record<string, boolean>>(
-    () => {
-      const map: Record<string, boolean> = {};
-      for (const key of initialMemorizationKeys) {
-        map[key] = true;
-      }
-      return map;
-    },
+    {},
   );
-  const [unitIdMap, setUnitIdMap] = useState<Record<string, boolean>>(() => {
-    const map: Record<string, boolean> = {};
-    for (const key of initialMemorizationUnitIds) {
-      map[key] = true;
-    }
-    return map;
-  });
-
+  const [unitIdMap, setUnitIdMap] = useState<Record<string, boolean>>({});
   const pageAyahs = segments.flatMap((segment) => segment.ayahs);
   const pageFirst = pageAyahs[0];
   const pageLast = pageAyahs[pageAyahs.length - 1];
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void Promise.all([
+      loadSessionFavoriteKeys(),
+      loadSessionMemorizationRows(),
+    ]).then(([favoriteKeys, rows]) => {
+      if (cancelled) return;
+
+      const ayahs = segments.flatMap((segment) => segment.ayahs);
+      const favorites: Record<string, boolean> = {};
+      for (const key of favoriteKeys) {
+        favorites[key] = true;
+      }
+
+      const membership: Record<string, boolean> = {};
+      const units: Record<string, boolean> = {};
+      for (const row of rows) {
+        units[memorizationUnitIdentity(row)] = true;
+        for (const ayah of ayahs) {
+          if (memorizationRowCoversPageAyah(row, ayah, pageNumber)) {
+            membership[ayahMembershipKey(ayah.surahNumber, ayah.ayahNumber)] =
+              true;
+          }
+        }
+      }
+
+      setFavoriteMap(favorites);
+      setMembershipMap(membership);
+      setUnitIdMap(units);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pageNumber, segments]);
 
   function isFavorited(surahNumber: number, ayahNumber: number): boolean {
     return favoriteMap[favoriteKey(surahNumber, ayahNumber)] === true;
@@ -300,10 +315,17 @@ export function MushafInteractiveLeaf({
                           marker.ayahNumber === ayah.ayahNumber,
                       );
 
+                      const isActiveTrack =
+                        activeAyah?.surahNumber === ayah.surahNumber &&
+                        activeAyah.ayahNumber === ayah.ayahNumber;
+
                       return (
                         <span
                           key={`${ayah.surahNumber}:${ayah.ayahNumber}`}
                           id={`ayah-${ayah.surahNumber}-${ayah.ayahNumber}`}
+                          className={
+                            isActiveTrack ? "mushaf-ayah-active" : undefined
+                          }
                         >
                           {rub ? (
                             <RubAlHizbMarker
@@ -394,7 +416,6 @@ export function MushafInteractiveLeaf({
                   label={tMemorization("mushaf.confirmRange")}
                   pendingLabel={tMemorization("adding")}
                   alreadyAdded={unitAlreadyAdded(rangeIdentity)}
-                  isAuthenticated={isAuthenticated}
                   returnPath={ayahReturnPath}
                   payload={{
                     unitType: rangeStart === rangeEnd ? "ayah" : "range",
@@ -444,7 +465,6 @@ export function MushafInteractiveLeaf({
                 surahNumber={selected.surahNumber}
                 ayahNumber={selected.ayahNumber}
                 pageNumber={pageNumber}
-                isAuthenticated={isAuthenticated}
                 returnPath={ayahReturnPath}
               />
               <FavoriteToggle
@@ -455,7 +475,6 @@ export function MushafInteractiveLeaf({
                   selected.surahNumber,
                   selected.ayahNumber,
                 )}
-                isAuthenticated={isAuthenticated}
                 returnPath={ayahReturnPath}
                 variant="button"
                 onFavoritedChange={(favorited) => {
@@ -486,7 +505,6 @@ export function MushafInteractiveLeaf({
                 label={tMemorization("mushaf.memorizeAyah")}
                 pendingLabel={tMemorization("adding")}
                 alreadyAdded={unitAlreadyAdded(ayahIdentity)}
-                isAuthenticated={isAuthenticated}
                 returnPath={ayahReturnPath}
                 payload={{
                   unitType: "ayah",
@@ -516,7 +534,6 @@ export function MushafInteractiveLeaf({
                   label={tMemorization("mushaf.memorizePage")}
                   pendingLabel={tMemorization("adding")}
                   alreadyAdded={unitAlreadyAdded(pageIdentity)}
-                  isAuthenticated={isAuthenticated}
                   returnPath={returnPath}
                   payload={{
                     unitType: "page",
@@ -552,6 +569,13 @@ export function MushafInteractiveLeaf({
       </div>
 
       <style href="mushaf-ayah-select" precedence="mushaf-ayah-select">{`
+        .mushaf-ayah-active {
+          background-color: rgba(184, 148, 74, 0.2);
+          border-radius: 0.12em;
+          box-decoration-break: clone;
+          -webkit-box-decoration-break: clone;
+          transition: background-color 220ms ease;
+        }
         .mushaf-ayah-marker-btn {
           display: inline-flex;
           padding: 0;

@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Generated during production build by scripts/generate-pwa-manifest.mjs
+/public/sw.js
+/public/precache-manifest.json

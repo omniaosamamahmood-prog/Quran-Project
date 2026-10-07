@@ -1,7 +1,28 @@
+import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 
 const PATH_SEGMENT = String.raw`[\w./~%-]*`;
 const HASH_SEGMENT = String.raw`[\w./~%-]*`;
+
+/**
+ * Locale prefix on an internal path, e.g. "/en/favorites" → "en".
+ * Unknown or external values fall back to the default locale.
+ */
+export function localeFromInternalPath(
+  path: string | null | undefined,
+): string {
+  if (path) {
+    const match = new RegExp(
+      `^/(${routing.locales.join("|")})(?:/|$)`,
+    ).exec(path);
+
+    if (match?.[1] && hasLocale(routing.locales, match[1])) {
+      return match[1];
+    }
+  }
+
+  return routing.defaultLocale;
+}
 
 /**
  * Returns a safe same-origin internal path for post-login redirect.

@@ -3,15 +3,18 @@
 import { useState, useTransition, type MouseEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { useFavoriteKeys } from "@/components/favorites/FavoriteKeysProvider";
 import { HeartIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import { supabase } from "@/lib/supabase/client";
+import { isDeviceOffline } from "@/lib/pwa/offline";
+import { favoriteKey } from "@/types/favorites";
 
 type FavoriteToggleProps = {
   surahNumber: number;
   ayahNumber: number;
-  initialFavorited: boolean;
-  isAuthenticated: boolean;
+  /** Used when this toggle is outside FavoriteKeysProvider. */
+  initialFavorited?: boolean;
   /** App path (no locale) to return to after login; may include hash. */
   returnPath: string;
   className?: string;
@@ -154,8 +157,7 @@ function formatDiagnostic(failure: FavoriteFailure): string {
 export function FavoriteToggle({
   surahNumber,
   ayahNumber,
-  initialFavorited,
-  isAuthenticated,
+  initialFavorited = false,
   returnPath,
   className,
   variant = "icon",
@@ -164,15 +166,20 @@ export function FavoriteToggle({
   const t = useTranslations("Favorites");
   const locale = useLocale();
   const router = useRouter();
-  const [favorited, setFavorited] = useState(initialFavorited);
-  const [syncedInitial, setSyncedInitial] = useState(initialFavorited);
+  const favoriteKeys = useFavoriteKeys();
+  const key = favoriteKey(surahNumber, ayahNumber);
+  const remoteFavorited = favoriteKeys
+    ? favoriteKeys.keys.has(key)
+    : initialFavorited;
+  const [favorited, setFavorited] = useState(remoteFavorited);
+  const [syncedInitial, setSyncedInitial] = useState(remoteFavorited);
   const [error, setError] = useState("");
   const [diagnostic, setDiagnostic] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  if (initialFavorited !== syncedInitial) {
-    setSyncedInitial(initialFavorited);
-    setFavorited(initialFavorited);
+  if (remoteFavorited !== syncedInitial) {
+    setSyncedInitial(remoteFavorited);
+    setFavorited(remoteFavorited);
   }
 
   function redirectToLogin() {
@@ -187,8 +194,8 @@ export function FavoriteToggle({
     setError("");
     setDiagnostic("");
 
-    if (!isAuthenticated) {
-      redirectToLogin();
+    if (isDeviceOffline()) {
+      setError(t("errors.offline"));
       return;
     }
 
@@ -196,10 +203,23 @@ export function FavoriteToggle({
       const previous = favorited;
       setFavorited(!previous);
 
-      const result = await toggleFavoriteClient(surahNumber, ayahNumber);
+      let result: Awaited<ReturnType<typeof toggleFavoriteClient>>;
+      try {
+        result = await toggleFavoriteClient(surahNumber, ayahNumber);
+      } catch {
+        setFavorited(previous);
+        setError(
+          isDeviceOffline() ? t("errors.offline") : t("errors.toggleFailed"),
+        );
+        return;
+      }
 
       if (!result.ok) {
         setFavorited(previous);
+        if (isDeviceOffline()) {
+          setError(t("errors.offline"));
+          return;
+        }
         if (result.error === "auth_required") {
           redirectToLogin();
           return;
@@ -222,6 +242,7 @@ export function FavoriteToggle({
       }
 
       setFavorited(result.favorited);
+      favoriteKeys?.setKey(key, result.favorited);
       onFavoritedChange?.(result.favorited);
       router.refresh();
     });

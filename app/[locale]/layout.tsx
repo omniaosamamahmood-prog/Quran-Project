@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import Navbar from "@/components/layout/Navbar";
@@ -10,6 +10,7 @@ import { MainChrome } from "@/components/layout/MainChrome";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AudioProvider } from "@/components/audio/AudioProvider";
 import { GlobalAudioPlayer } from "@/components/audio/GlobalAudioPlayer";
+import { PwaRuntime } from "@/components/pwa/PwaRuntime";
 import {
   amiriQuran,
   ibmPlexSansArabic,
@@ -18,7 +19,6 @@ import {
   sourceSerif,
 } from "@/app/fonts";
 import { cn } from "@/lib/cn";
-import { createClient } from "@/lib/supabase/server";
 import "../globals.css";
 
 type Props = {
@@ -30,17 +30,39 @@ export const viewport: Viewport = {
   themeColor: "#faf8f2",
 };
 
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  if (hasLocale(routing.locales, locale)) {
+    setRequestLocale(locale);
+  }
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
     title: t("title"),
     description: t("description"),
+    manifest:
+      locale === "en" ? "/manifest-en.webmanifest" : "/manifest-ar.webmanifest",
+    icons: {
+      icon: [
+        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        {
+          url: "/icons/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+    },
   };
 }
 
@@ -51,23 +73,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
+  setRequestLocale(locale);
+
   const t = await getTranslations("Navigation");
   const direction = locale === "ar" ? "rtl" : "ltr";
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const navbarUser = user
-    ? {
-        fullName:
-          typeof user.user_metadata?.full_name === "string"
-            ? user.user_metadata.full_name
-            : null,
-        email: user.email ?? null,
-      }
-    : null;
 
   return (
     <html
@@ -91,7 +100,8 @@ export default async function LocaleLayout({ children, params }: Props) {
             >
               {t("skipToContent")}
             </a>
-            <Navbar user={navbarUser} />
+            <PwaRuntime />
+            <Navbar />
             <MainChrome footer={<SiteFooter />}>{children}</MainChrome>
             <GlobalAudioPlayer />
             <MobileNavigation />

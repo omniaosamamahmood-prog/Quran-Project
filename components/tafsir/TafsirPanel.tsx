@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
+import { isDeviceOffline } from "@/lib/pwa/offline";
 import type { TafsirApiError, TafsirPayload } from "@/types/tafsir";
 
 type TafsirPanelProps = {
@@ -19,12 +20,19 @@ type LoadState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "ready"; data: TafsirPayload }
-  | { status: "error"; retryable: boolean };
+  | { status: "error"; retryable: boolean; offline: boolean };
 
 async function fetchTafsir(
   surahNumber: number,
   ayahNumber: number,
-): Promise<{ ok: true; data: TafsirPayload } | { ok: false; retryable: boolean }> {
+): Promise<
+  | { ok: true; data: TafsirPayload }
+  | { ok: false; retryable: boolean; offline: boolean }
+> {
+  if (isDeviceOffline()) {
+    return { ok: false, retryable: true, offline: true };
+  }
+
   try {
     const response = await fetch(
       `/api/tafsir?surah=${surahNumber}&ayah=${ayahNumber}`,
@@ -47,17 +55,17 @@ async function fetchTafsir(
       } catch {
         // ignore parse failures — keep status-based retryable
       }
-      return { ok: false, retryable };
+      return { ok: false, retryable, offline: false };
     }
 
     const data = (await response.json()) as TafsirPayload;
     if (!data.tafsir || !data.sourceName) {
-      return { ok: false, retryable: true };
+      return { ok: false, retryable: true, offline: false };
     }
 
     return { ok: true, data };
   } catch {
-    return { ok: false, retryable: true };
+    return { ok: false, retryable: true, offline: isDeviceOffline() };
   }
 }
 
@@ -97,7 +105,11 @@ export function TafsirPanel({
       if (result.ok) {
         setState({ status: "ready", data: result.data });
       } else {
-        setState({ status: "error", retryable: result.retryable });
+        setState({
+          status: "error",
+          retryable: result.retryable,
+          offline: result.offline,
+        });
       }
     });
 
@@ -226,7 +238,7 @@ export function TafsirPanel({
                     isArabicUi && "leading-relaxed",
                   )}
                 >
-                  {t("error")}
+                  {state.offline ? t("offline") : t("error")}
                 </p>
                 {state.retryable ? (
                   <button

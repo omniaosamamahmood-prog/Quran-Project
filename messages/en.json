@@ -166,6 +166,13 @@
   "Footer": {
     "note": "Your companion for reading, memorization and review"
   },
+  "Auth": {
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "googleSubmitting": "Continuing with Google...",
+    "googleError": "Could not continue with Google. Please try again.",
+    "googleCancelled": "Google sign-in was cancelled."
+  },
   "Register": {
     "title": "Create Account",
     "subtitle": "Join Quran Companion and begin a calm journey with the Book of Allah.",
@@ -252,7 +259,8 @@
       "permission": "You do not have permission to update favorites. Check Supabase RLS policies for the favorites table.",
       "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — this Favorites flow does not create them.",
       "invalid": "This ayah reference is not valid.",
-      "notFound": "That favorite was not found."
+      "notFound": "That favorite was not found.",
+      "offline": "Saving a favorite needs an internet connection."
     }
   },
   "ReadingProgress": {
@@ -268,7 +276,8 @@
       "saveFailedWithCode": "Could not save reading position ({code}). Please try again.",
       "permission": "You do not have permission to save reading progress. Check Supabase RLS policies for the reading_progress table.",
       "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — this Reading Progress flow does not create them.",
-      "invalid": "This reading position reference is not valid."
+      "invalid": "This reading position reference is not valid.",
+      "offline": "Saving your reading position needs an internet connection."
     }
   },
   "Memorization": {
@@ -334,7 +343,8 @@
       "invalid": "This memorization unit is not valid.",
       "notFound": "That memorization item was not found.",
       "duplicate": "This unit is already in your memorization list.",
-      "crossSurah": "Ranges must stay within one Surah."
+      "crossSurah": "Ranges must stay within one Surah.",
+      "offline": "Updating memorization needs an internet connection."
     }
   },
   "Review": {
@@ -394,7 +404,8 @@
       "permission": "You do not have permission to update reviews. Check Supabase RLS policies for memorization_reviews.",
       "profileRequired": "Unexpected missing profile (FK 23503). Profiles are created by the signup trigger — Review does not create them.",
       "notFound": "That review item was not found.",
-      "notDue": "This unit is not due for review yet."
+      "notDue": "This unit is not due for review yet.",
+      "offline": "Saving a review needs an internet connection."
     }
   },
   "Tafsir": {
@@ -405,6 +416,7 @@
     "source": "Source: {name}",
     "loading": "Loading tafsir...",
     "error": "Tafsir could not be loaded right now.",
+    "offline": "Tafsir requires an internet connection.",
     "retry": "Try again",
     "close": "Close",
     "mushaf": {
@@ -430,6 +442,7 @@
     "startListening": "Start listening",
     "current": "Now playing",
     "error": "Audio could not be loaded right now.",
+    "offline": "Audio requires an internet connection.",
     "retry": "Try again",
     "close": "Close"
   },
@@ -491,5 +504,16 @@
       "placeholder": "Search Arabic text, translation, or category…",
       "empty": "No matching remembrances."
     }
+  },
+  "Offline": {
+    "title": "No internet connection",
+    "description": "This page needs an internet connection. You can still read the Quran and Adhkar saved on this device.",
+    "openQuran": "Open the Quran",
+    "openAdhkar": "Open Adhkar"
+  },
+  "Install": {
+    "action": "Install Quran Companion",
+    "iosInstructions": "To install Quran Companion:\nTap Share, then choose “Add to Home Screen”.",
+    "close": "Close"
   }
 }

@@ -8,6 +8,7 @@ import {
 import {
   ayahMembershipKey,
   memorizationUnitIdentity,
+  MEMORIZATION_ROW_COLUMNS,
   type MemorizationRow,
   type MemorizationStatus,
   type MemorizationUnitType,
@@ -38,9 +39,6 @@ export type ResolvedMemorizationUnit = {
   surahNames: string[];
 };
 
-const MEMORIZATION_SELECT =
-  "id, user_id, unit_type, surah_number, start_ayah_number, end_ayah_number, page_number, status, created_at, memorized_at, updated_at";
-
 /**
  * Authenticated user's memorization units, newest-first.
  * Empty for guests. Never invents rows. Does not touch public.profiles.
@@ -59,7 +57,7 @@ export async function loadMemorizationRows(): Promise<
 
   const { data, error } = await supabase
     .from("memorization")
-    .select(MEMORIZATION_SELECT)
+    .select(MEMORIZATION_ROW_COLUMNS)
     .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
 

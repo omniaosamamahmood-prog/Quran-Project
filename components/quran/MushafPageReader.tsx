@@ -1,19 +1,14 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { MushafInteractiveLeaf } from "@/components/favorites/MushafInteractiveLeaf";
+import { MushafAudioFollow } from "@/components/quran/MushafAudioFollow";
 import { ArrowIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
-import { getFavoriteKeySet } from "@/lib/favorites";
-import {
-  getMemorizationKeySet,
-  getMemorizationUnitIdentitySet,
-} from "@/lib/memorization";
 import {
   getMushafPageCount,
   getRubForAyah,
   getRubMarkersForAyahs,
 } from "@/lib/quran";
-import { createClient } from "@/lib/supabase/server";
 import type { QuranPage, QuranPageAyah } from "@/types/quran";
 
 type MushafPageReaderProps = {
@@ -84,21 +79,6 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
       ].join(" • ")
     : null;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const isAuthenticated = Boolean(user);
-  const favoriteKeys = isAuthenticated
-    ? [...(await getFavoriteKeySet())]
-    : [];
-  const memorizationKeys = isAuthenticated
-    ? [...(await getMemorizationKeySet())]
-    : [];
-  const memorizationUnitIds = isAuthenticated
-    ? [...(await getMemorizationUnitIdentitySet())]
-    : [];
-
   const prevControl = hasPrevious ? (
     <Link
       href={`/quran/page/${page.pageNumber - 1}`}
@@ -131,6 +111,7 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
 
   return (
     <main id="main" className="mushaf-reader">
+      <MushafAudioFollow pageNumber={page.pageNumber} />
       <div className="mushaf-reader-inner">
         <nav className="mushaf-reader-back">
           <Link
@@ -160,10 +141,6 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
               isCompact={isCompact}
               pageNumber={page.pageNumber}
               pageNumberLabel={toEasternDigits(page.pageNumber)}
-              initialFavoriteKeys={favoriteKeys}
-              initialMemorizationKeys={memorizationKeys}
-              initialMemorizationUnitIds={memorizationUnitIds}
-              isAuthenticated={isAuthenticated}
               returnPath={`/quran/page/${page.pageNumber}`}
               rubMarkers={getRubMarkersForAyahs(page.ayahs)}
             />

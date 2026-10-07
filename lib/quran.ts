@@ -43,32 +43,45 @@ type RubMetadataFile = {
   quarters: RubQuarterSource[];
 };
 
-/** Parses the dataset once per request. */
-const loadQuran = cache(
-  (): Quran => JSON.parse(readFileSync(DATA_FILE, "utf8")) as Quran,
-);
+/** Parsed once per server process. File contents are not rewritten. */
+let quranCache: Quran | undefined;
+let pageCache: QuranPageStart[] | undefined;
+let juzCache: JuzBoundary[] | undefined;
+let rubCache: RubQuarterSource[] | undefined;
+let orderedAyahCache: QuranPageAyah[] | undefined;
 
-const loadQuranPages = cache(
-  (): QuranPageStart[] =>
-    JSON.parse(readFileSync(PAGES_FILE, "utf8")) as QuranPageStart[],
-);
+const loadQuran = cache((): Quran => {
+  quranCache ??= JSON.parse(readFileSync(DATA_FILE, "utf8")) as Quran;
+  return quranCache;
+});
+
+const loadQuranPages = cache((): QuranPageStart[] => {
+  pageCache ??= JSON.parse(readFileSync(PAGES_FILE, "utf8")) as QuranPageStart[];
+  return pageCache;
+});
 
 const loadJuzBoundaries = cache((): JuzBoundary[] => {
-  const file = JSON.parse(readFileSync(JUZ_FILE, "utf8")) as JuzMetadataFile;
-  return file.juzs;
+  if (!juzCache) {
+    const file = JSON.parse(readFileSync(JUZ_FILE, "utf8")) as JuzMetadataFile;
+    juzCache = file.juzs;
+  }
+  return juzCache;
 });
 
 const loadRubQuarters = cache((): RubQuarterSource[] => {
-  const file = JSON.parse(readFileSync(RUB_FILE, "utf8")) as RubMetadataFile;
-  return file.quarters;
+  if (!rubCache) {
+    const file = JSON.parse(readFileSync(RUB_FILE, "utf8")) as RubMetadataFile;
+    rubCache = file.quarters;
+  }
+  return rubCache;
 });
 
 /**
- * All ayahs in Mushaf order, carrying Surah context. Cached so page slices do
- * not rebuild the 6,236-ayah list on every lookup.
+ * All ayahs in Mushaf order, carrying Surah context. Built once so page slices
+ * do not rebuild the 6,236-ayah list on every lookup.
  */
-const getOrderedAyahs = cache((): QuranPageAyah[] =>
-  loadQuran().surahs.flatMap((surah) =>
+const getOrderedAyahs = cache((): QuranPageAyah[] => {
+  orderedAyahCache ??= loadQuran().surahs.flatMap((surah) =>
     surah.ayahs.map((ayah) => {
       const item: QuranPageAyah = {
         surahNumber: surah.number,
@@ -83,8 +96,14 @@ const getOrderedAyahs = cache((): QuranPageAyah[] =>
 
       return item;
     }),
-  ),
-);
+  );
+  return orderedAyahCache;
+});
+
+/** Surah numbers from the local dataset, without scanning Mushaf pages. */
+export function listSurahNumbers(): number[] {
+  return loadQuran().surahs.map((surah) => surah.number);
+}
 
 function findAyahIndex(
   ayahs: QuranPageAyah[],

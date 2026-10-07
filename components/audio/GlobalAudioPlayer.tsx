@@ -89,7 +89,7 @@ export function GlobalAudioPlayer() {
         {errored ? (
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm text-muted" role="alert">
-              {t("error")}
+              {errorMessage === "offline" ? t("offline") : t("error")}
             </p>
             <button
               type="button"

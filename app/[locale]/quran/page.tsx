@@ -1,10 +1,16 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { QuranCatalog } from "@/components/quran/QuranCatalog";
 import { Container } from "@/components/ui/Container";
 import { getJuzSummaries, getSurahSummaries } from "@/lib/quran";
 import { cn } from "@/lib/cn";
 
-export default async function QuranPage() {
+export default async function QuranPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("Quran");
   const isArabic = (await getLocale()) === "ar";
 

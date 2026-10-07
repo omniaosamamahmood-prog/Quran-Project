@@ -1,12 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { FavoriteKeysProvider } from "@/components/favorites/FavoriteKeysProvider";
 import { FavoriteToggle } from "@/components/favorites/FavoriteToggle";
 import { Container } from "@/components/ui/Container";
 import { ArrowIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
-import { getFavoriteKeySet } from "@/lib/favorites";
-import { createClient } from "@/lib/supabase/server";
-import { favoriteKey } from "@/types/favorites";
 import type { Surah } from "@/types/quran";
 
 type SurahReaderProps = {
@@ -18,13 +16,6 @@ export async function SurahReader({ surah }: SurahReaderProps) {
   const isArabic = (await getLocale()) === "ar";
   const ayahCount = surah.ayahs.length;
   const bismillah = surah.ayahs[0]?.bismillah;
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const isAuthenticated = Boolean(user);
-  const favoriteKeys = isAuthenticated ? await getFavoriteKeySet() : new Set<string>();
 
   return (
     <main id="main" className="py-8 sm:py-12">
@@ -39,6 +30,7 @@ export async function SurahReader({ surah }: SurahReaderProps) {
           </Link>
         </nav>
 
+        <FavoriteKeysProvider>
         <article>
           <header className="border-b border-line pb-7 text-center">
             <p
@@ -90,10 +82,6 @@ export async function SurahReader({ surah }: SurahReaderProps) {
                   <FavoriteToggle
                     surahNumber={surah.number}
                     ayahNumber={ayah.number}
-                    initialFavorited={favoriteKeys.has(
-                      favoriteKey(surah.number, ayah.number),
-                    )}
-                    isAuthenticated={isAuthenticated}
                     returnPath={`/quran/${surah.number}#ayah-${ayah.number}`}
                     className="mx-[0.08em] inline-flex -translate-y-[0.14em] align-middle"
                   />
@@ -102,6 +90,7 @@ export async function SurahReader({ surah }: SurahReaderProps) {
             </p>
           </div>
         </article>
+        </FavoriteKeysProvider>
       </Container>
     </main>
   );

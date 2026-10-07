@@ -1,5 +1,12 @@
+import { setRequestLocale } from "next-intl/server";
 import { AdhkarHome } from "@/components/adhkar/AdhkarHome";
 
-export default function AdhkarPage() {
+export default async function AdhkarPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return <AdhkarHome />;
 }

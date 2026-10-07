@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { RegisterVisualPanel } from "@/components/auth/RegisterVisualPanel";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { cn } from "@/lib/cn";
@@ -316,6 +317,8 @@ export default function RegisterPage() {
                 {loading ? t("submitting") : t("submit")}
               </button>
             </form>
+
+            <GoogleSignInButton />
 
             <p className="mt-4 text-center text-sm text-muted">
               {t("hasAccount")}{" "}

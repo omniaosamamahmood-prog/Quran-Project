@@ -6,12 +6,12 @@ import { useRouter } from "@/i18n/navigation";
 import { BookmarkIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import { supabase } from "@/lib/supabase/client";
+import { isDeviceOffline } from "@/lib/pwa/offline";
 
 type SaveReadingPositionProps = {
   surahNumber: number;
   ayahNumber: number;
   pageNumber: number;
-  isAuthenticated: boolean;
   /** App path (no locale) to return to after login; may include hash. */
   returnPath: string;
   className?: string;
@@ -192,7 +192,6 @@ export function SaveReadingPosition({
   surahNumber,
   ayahNumber,
   pageNumber,
-  isAuthenticated,
   returnPath,
   className,
   onSaved,
@@ -218,19 +217,31 @@ export function SaveReadingPosition({
     setDiagnostic("");
     setSavedFlash(false);
 
-    if (!isAuthenticated) {
-      redirectToLogin();
+    if (isDeviceOffline()) {
+      setError(t("errors.offline"));
       return;
     }
 
     startTransition(async () => {
-      const result = await saveReadingPositionClient(
-        surahNumber,
-        ayahNumber,
-        pageNumber,
-      );
+      let result: Awaited<ReturnType<typeof saveReadingPositionClient>>;
+      try {
+        result = await saveReadingPositionClient(
+          surahNumber,
+          ayahNumber,
+          pageNumber,
+        );
+      } catch {
+        setError(
+          isDeviceOffline() ? t("errors.offline") : t("errors.saveFailed"),
+        );
+        return;
+      }
 
       if (!result.ok) {
+        if (isDeviceOffline()) {
+          setError(t("errors.offline"));
+          return;
+        }
         if (result.error === "auth_required") {
           redirectToLogin();
           return;

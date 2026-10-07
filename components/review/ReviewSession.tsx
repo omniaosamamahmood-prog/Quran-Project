@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { submitReviewRating } from "@/app/actions/review";
 import { cn } from "@/lib/cn";
+import { isDeviceOffline } from "@/lib/pwa/offline";
 import type { MemorizationUnitType } from "@/types/memorization";
 import type { ReviewRating } from "@/types/review";
 
@@ -62,10 +63,25 @@ export function ReviewSession({ items }: ReviewSessionProps) {
     setError("");
     setDiagnostic("");
 
+    if (isDeviceOffline()) {
+      setError(t("errors.offline"));
+      return;
+    }
+
     startTransition(async () => {
-      const result = await submitReviewRating(current.reviewId, rating);
+      let result: Awaited<ReturnType<typeof submitReviewRating>>;
+      try {
+        result = await submitReviewRating(current.reviewId, rating);
+      } catch {
+        setError(isDeviceOffline() ? t("errors.offline") : t("errors.rateFailed"));
+        return;
+      }
 
       if (!result.ok) {
+        if (isDeviceOffline()) {
+          setError(t("errors.offline"));
+          return;
+        }
         const raw = [
           `operation: ${result.operation ?? "(none)"}`,
           `code: ${result.code ?? "(none)"}`,

@@ -4,6 +4,7 @@ import { FormEvent, Suspense, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link, useRouter } from "@/i18n/navigation";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { RegisterVisualPanel } from "@/components/auth/RegisterVisualPanel";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { getSafeInternalPath, toAppHref } from "@/lib/auth/safe-next";
@@ -61,6 +62,13 @@ function LoginContent() {
 
   const confirmed = searchParams.get("confirmed") === "true";
   const nextParam = searchParams.get("next");
+  const oauthParam = searchParams.get("error");
+  const oauthNotice =
+    oauthParam === "oauth_cancelled"
+      ? "cancelled"
+      : oauthParam === "oauth"
+        ? "failed"
+        : null;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -238,6 +246,8 @@ function LoginContent() {
                 {loading ? t("submitting") : t("submit")}
               </button>
             </form>
+
+            <GoogleSignInButton notice={oauthNotice} />
 
             <p className="mt-4 text-center text-sm text-muted">
               {t("noAccount")}{" "}

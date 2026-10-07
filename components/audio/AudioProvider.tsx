@@ -14,8 +14,8 @@ import {
   DEFAULT_RECITER_ID,
   V1_RECITERS,
   type AyahAudioPayload,
-  type QuranAudioApiError,
 } from "@/types/quran-audio";
+import { isDeviceOffline } from "@/lib/pwa/offline";
 
 const RECITER_STORAGE_KEY = "quran-companion.reciterId";
 
@@ -64,6 +64,14 @@ type AudioContextValue = {
 
 const AudioContext = createContext<AudioContextValue | null>(null);
 
+/** Surah + ayah of the loaded track. Null when the player has no track. */
+export type ActiveQuranAyah = {
+  surahNumber: number;
+  ayahNumber: number;
+};
+
+const ActiveAyahContext = createContext<ActiveQuranAyah | null>(null);
+
 async function fetchAdjacent(
   surahNumber: number,
   ayahNumber: number,
@@ -83,29 +91,30 @@ async function fetchAudio(
   ayahNumber: number,
   reciterId: string,
 ): Promise<
-  { ok: true; data: AyahAudioPayload } | { ok: false; message: string }
+  | { ok: true; data: AyahAudioPayload }
+  | { ok: false; reason: "offline" | "unavailable" }
 > {
+  if (isDeviceOffline()) {
+    return { ok: false, reason: "offline" };
+  }
+
   try {
     const response = await fetch(
       `/api/quran/audio?surah=${surahNumber}&ayah=${ayahNumber}&reciter=${encodeURIComponent(reciterId)}`,
     );
     if (!response.ok) {
-      let message = "Audio could not be loaded right now.";
-      try {
-        const body = (await response.json()) as QuranAudioApiError;
-        if (body.message) message = body.message;
-      } catch {
-        // ignore
-      }
-      return { ok: false, message };
+      return { ok: false, reason: "unavailable" };
     }
     const data = (await response.json()) as AyahAudioPayload;
     if (!data.audioUrl) {
-      return { ok: false, message: "Audio could not be loaded right now." };
+      return { ok: false, reason: "unavailable" };
     }
     return { ok: true, data };
   } catch {
-    return { ok: false, message: "Audio could not be loaded right now." };
+    return {
+      ok: false,
+      reason: isDeviceOffline() ? "offline" : "unavailable",
+    };
   }
 }
 
@@ -220,7 +229,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
           const load = loadAndMaybePlayRef.current;
           if (!load) {
             setStatus("error");
-            setErrorMessage("Audio could not be loaded right now.");
+            setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
             return;
           }
 
@@ -232,7 +241,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
           );
         } catch {
           setStatus("error");
-          setErrorMessage("Audio could not be loaded right now.");
+          setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
         } finally {
           advancingRef.current = false;
         }
@@ -240,7 +249,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     };
     const onError = () => {
       setStatus("error");
-      setErrorMessage("Audio could not be loaded right now.");
+      setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
     };
 
     audio.addEventListener("loadedmetadata", onLoaded);
@@ -300,7 +309,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
       if (!result.ok) {
         setStatus("error");
-        setErrorMessage(result.message);
+        setErrorMessage(result.reason);
         return;
       }
 
@@ -361,7 +370,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     continuousEnabledRef.current = true;
     void audioRef.current?.play().catch(() => {
       setStatus("error");
-      setErrorMessage("Audio could not be loaded right now.");
+      setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
     });
   }, []);
 
@@ -527,9 +536,26 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     ],
   );
 
+  const activeAyah = useMemo<ActiveQuranAyah | null>(() => {
+    if (!track) return null;
+    return {
+      surahNumber: track.surahNumber,
+      ayahNumber: track.ayahNumber,
+    };
+  }, [track]);
+
   return (
-    <AudioContext.Provider value={value}>{children}</AudioContext.Provider>
+    <AudioContext.Provider value={value}>
+      <ActiveAyahContext.Provider value={activeAyah}>
+        {children}
+      </ActiveAyahContext.Provider>
+    </AudioContext.Provider>
   );
+}
+
+/** Loaded Quran ayah, or null after the player is closed. Same track state as useQuranAudio. */
+export function useActiveQuranAyah(): ActiveQuranAyah | null {
+  return useContext(ActiveAyahContext);
 }
 
 export function useQuranAudio() {
