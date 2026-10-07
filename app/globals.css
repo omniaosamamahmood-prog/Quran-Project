@@ -37,8 +37,16 @@ html {
   overflow-x: clip;
 }
 
+/* Tailwind's sr-only uses a -1px margin. On a phone that margin sits past
+   the screen edge and lets the page pan sideways. */
+.sr-only {
+  margin: 0;
+}
+
 body {
   min-height: 100dvh;
+  max-width: 100%;
+  overflow-x: clip;
   background-color: var(--color-canvas);
   color: var(--color-ink);
 }

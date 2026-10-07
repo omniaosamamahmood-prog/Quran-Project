@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { MushafInteractiveLeaf } from "@/components/favorites/MushafInteractiveLeaf";
 import { MushafAudioFollow } from "@/components/quran/MushafAudioFollow";
+import { MushafMobilePageTurn } from "@/components/quran/MushafMobilePageTurn";
 import { ArrowIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import {
@@ -82,29 +83,31 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
   const prevControl = hasPrevious ? (
     <Link
       href={`/quran/page/${page.pageNumber - 1}`}
+      aria-label={t("pageReader.previous")}
       className="inline-flex items-center gap-2 text-sm text-emerald transition-colors hover:text-emerald-deep"
     >
       <ArrowIcon className="rotate-180 rtl:rotate-0" />
-      <span className="max-lg:sr-only">{t("pageReader.previous")}</span>
+      <span className="mushaf-nav-label">{t("pageReader.previous")}</span>
     </Link>
   ) : (
     <span className="inline-flex items-center gap-2 text-sm text-muted/50">
       <ArrowIcon className="rotate-180 rtl:rotate-0" />
-      <span className="max-lg:sr-only">{t("pageReader.previous")}</span>
+      <span className="mushaf-nav-label">{t("pageReader.previous")}</span>
     </span>
   );
 
   const nextControl = hasNext ? (
     <Link
       href={`/quran/page/${page.pageNumber + 1}`}
+      aria-label={t("pageReader.next")}
       className="inline-flex items-center gap-2 text-sm text-emerald transition-colors hover:text-emerald-deep"
     >
-      <span className="max-lg:sr-only">{t("pageReader.next")}</span>
+      <span className="mushaf-nav-label">{t("pageReader.next")}</span>
       <ArrowIcon className="rtl:rotate-180" />
     </Link>
   ) : (
     <span className="inline-flex items-center gap-2 text-sm text-muted/50">
-      <span className="max-lg:sr-only">{t("pageReader.next")}</span>
+      <span className="mushaf-nav-label">{t("pageReader.next")}</span>
       <ArrowIcon className="rtl:rotate-180" />
     </span>
   );
@@ -123,7 +126,7 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
           </Link>
         </nav>
 
-        <h1 className="sr-only">
+        <h1 className="mushaf-visually-hidden">
           {t("pageReader.indicator", {
             current: page.pageNumber,
             total: totalPages,
@@ -136,14 +139,21 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
           </div>
 
           <div className="mushaf-reader-page-column">
-            <MushafInteractiveLeaf
-              segments={segments}
-              isCompact={isCompact}
-              pageNumber={page.pageNumber}
-              pageNumberLabel={toEasternDigits(page.pageNumber)}
-              returnPath={`/quran/page/${page.pageNumber}`}
-              rubMarkers={getRubMarkersForAyahs(page.ayahs)}
-            />
+            <MushafMobilePageTurn
+              previousHref={
+                hasPrevious ? `/quran/page/${page.pageNumber - 1}` : null
+              }
+              nextHref={hasNext ? `/quran/page/${page.pageNumber + 1}` : null}
+            >
+              <MushafInteractiveLeaf
+                segments={segments}
+                isCompact={isCompact}
+                pageNumber={page.pageNumber}
+                pageNumberLabel={toEasternDigits(page.pageNumber)}
+                returnPath={`/quran/page/${page.pageNumber}`}
+                rubMarkers={getRubMarkersForAyahs(page.ayahs)}
+              />
+            </MushafMobilePageTurn>
           </div>
 
           <div className="mushaf-reader-side mushaf-reader-side-next">
@@ -182,7 +192,10 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
             100dvh - var(--navbar-h) - var(--reader-chrome-h) - var(--mobile-nav-h)
           );
           box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
           padding-block: 0.45rem 0.55rem;
+          overflow-x: clip;
         }
         @media (max-width: 639px) {
           .mushaf-reader {
@@ -192,8 +205,10 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
         }
         .mushaf-reader-inner {
           width: min(100%, 90rem);
+          max-width: 100%;
           margin-inline: auto;
-          padding-inline: 1rem;
+          padding-inline: 0.75rem;
+          box-sizing: border-box;
           display: flex;
           flex-direction: column;
           gap: 0.35rem;
@@ -208,9 +223,12 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
 
         .mushaf-reader-stage {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
           align-items: center;
           justify-items: center;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
           --mushaf-available-h: calc(
             100dvh - var(--navbar-h) - var(--reader-chrome-h) - var(--mobile-nav-h)
           );
@@ -362,6 +380,39 @@ export async function MushafPageReader({ page }: MushafPageReaderProps) {
         }
         .mushaf-ayah-flow {
           margin: 0;
+          max-width: 100%;
+          min-width: 0;
+          overflow-wrap: break-word;
+        }
+        .mushaf-quran,
+        .mushaf-surah-block,
+        .mushaf-surah-title,
+        .mushaf-ayah-chrome,
+        .mushaf-ayah-panel {
+          max-width: 100%;
+          min-width: 0;
+        }
+        .mushaf-visually-hidden,
+        .mushaf-nav-label {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          margin: 0;
+          padding: 0;
+          overflow: clip;
+          clip-path: inset(50%);
+          white-space: nowrap;
+          border: 0;
+        }
+        @media (min-width: 1024px) {
+          .mushaf-nav-label {
+            position: static;
+            width: auto;
+            height: auto;
+            overflow: visible;
+            clip-path: none;
+            white-space: normal;
+          }
         }
 
         .mushaf-page-num {

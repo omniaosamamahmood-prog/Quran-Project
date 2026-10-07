@@ -82,8 +82,6 @@ export function AyahNumber({ number, label, className }: AyahNumberProps) {
         <svg
           className="ayahNumberOrnament"
           viewBox="0 0 42 42"
-          width="42"
-          height="42"
           aria-hidden="true"
           focusable="false"
         >

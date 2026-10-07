@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { MemorizationItemActions } from "@/components/memorization/MemorizationItemActions";
+import { MemorizationPracticeAudio } from "@/components/memorization/MemorizationPracticeAudio";
 import { Container } from "@/components/ui/Container";
 import { requireUser } from "@/lib/auth/require-user";
 import { cn } from "@/lib/cn";
@@ -131,25 +132,14 @@ function MemorizationSection({
                   />
                 </div>
 
-                <div
-                  lang="ar"
-                  dir="rtl"
-                  className="mt-3 space-y-3 font-quran text-[1.35rem] leading-[2.1] text-ink sm:text-[1.5rem] sm:leading-[2.2]"
-                >
-                  {resolved.ayahs.map((ayah) => (
-                    <p key={`${ayah.surahNumber}:${ayah.ayahNumber}`}>
-                      {ayah.bismillah ? (
-                        <span className="mb-2 block text-center text-[1.02em]">
-                          {ayah.bismillah}
-                        </span>
-                      ) : null}
-                      {ayah.text}
-                      <span className="ms-1 text-[0.7em] text-emerald-deep/80">
-                        ﴿{ayah.ayahNumber}﴾
-                      </span>
-                    </p>
-                  ))}
-                </div>
+                <MemorizationPracticeAudio
+                  ayahs={resolved.ayahs.map((ayah) => ({
+                    surahNumber: ayah.surahNumber,
+                    ayahNumber: ayah.ayahNumber,
+                    text: ayah.text,
+                    bismillah: ayah.bismillah,
+                  }))}
+                />
 
                 <Link
                   href={resolved.mushafHref}

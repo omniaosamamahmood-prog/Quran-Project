@@ -15,6 +15,12 @@ import {
   V1_RECITERS,
   type AyahAudioPayload,
 } from "@/types/quran-audio";
+import {
+  consumeRepeatPlay,
+  createRepeatSession,
+  repeatOnEnded,
+  type RepeatSession,
+} from "@/lib/audio-repeat";
 import { isDeviceOffline } from "@/lib/pwa/offline";
 
 const RECITER_STORAGE_KEY = "quran-companion.reciterId";
@@ -49,6 +55,8 @@ type AudioContextValue = {
     surahNumber: number;
     ayahNumber: number;
     autoplay?: boolean;
+    /** Bounded replay of this ayah. Omit for normal continuous playback. */
+    repeatCount?: number;
   }) => Promise<void>;
   togglePlayPause: () => void;
   pause: () => void;
@@ -142,6 +150,8 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const continuousEnabledRef = useRef(false);
   /** Guards against duplicate `ended` → next-ayah races. */
   const advancingRef = useRef(false);
+  /** Finite replay of one ayah started from memorization. Null for normal playback. */
+  const repeatSessionRef = useRef<RepeatSession | null>(null);
   const loadAndMaybePlayRef = useRef<
     | ((
         surahNumber: number,
@@ -187,23 +197,57 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const onTime = () => setCurrentTime(audio.currentTime || 0);
     const onPlay = () => setStatus("playing");
     const onPause = () => {
-      if (!audio.ended) {
-        setStatus((current) => (current === "loading" ? current : "paused"));
-      }
+      if (advancingRef.current || audio.ended) return;
+      setStatus((current) => (current === "loading" ? current : "paused"));
     };
     const onEnded = () => {
       setCurrentTime(0);
-
-      if (!continuousEnabledRef.current) {
-        setStatus("paused");
-        return;
-      }
 
       if (advancingRef.current) {
         return;
       }
 
       const current = trackRef.current;
+      const session = repeatSessionRef.current;
+      const repeatAction = repeatOnEnded(session, current);
+
+      if (repeatAction === "replay" && session) {
+        advancingRef.current = true;
+        repeatSessionRef.current = consumeRepeatPlay(session);
+        const audioElement = audioRef.current;
+        if (!audioElement) {
+          advancingRef.current = false;
+          repeatSessionRef.current = null;
+          setStatus("paused");
+          return;
+        }
+        audioElement.currentTime = 0;
+        void audioElement
+          .play()
+          .then(() => {
+            advancingRef.current = false;
+          })
+          .catch(() => {
+            advancingRef.current = false;
+            repeatSessionRef.current = null;
+            setStatus("error");
+            setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
+          });
+        return;
+      }
+
+      if (repeatAction === "stop") {
+        repeatSessionRef.current = null;
+        continuousEnabledRef.current = false;
+        setStatus("paused");
+        return;
+      }
+
+      if (!continuousEnabledRef.current) {
+        setStatus("paused");
+        return;
+      }
+
       if (!current) {
         setStatus("paused");
         return;
@@ -308,6 +352,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       if (requestId !== requestIdRef.current) return;
 
       if (!result.ok) {
+        repeatSessionRef.current = null;
         setStatus("error");
         setErrorMessage(result.reason);
         return;
@@ -348,9 +393,24 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       surahNumber: number;
       ayahNumber: number;
       autoplay?: boolean;
+      repeatCount?: number;
     }) => {
-      if (input.autoplay !== false) {
-        continuousEnabledRef.current = true;
+      const session =
+        input.repeatCount == null
+          ? null
+          : createRepeatSession(
+              input.surahNumber,
+              input.ayahNumber,
+              input.repeatCount,
+            );
+      if (session) {
+        repeatSessionRef.current = session;
+        continuousEnabledRef.current = false;
+      } else {
+        repeatSessionRef.current = null;
+        if (input.autoplay !== false) {
+          continuousEnabledRef.current = true;
+        }
       }
       await loadAndMaybePlay(
         input.surahNumber,
@@ -367,7 +427,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resume = useCallback(() => {
-    continuousEnabledRef.current = true;
+    if (!repeatSessionRef.current) {
+      continuousEnabledRef.current = true;
+    }
     void audioRef.current?.play().catch(() => {
       setStatus("error");
       setErrorMessage(isDeviceOffline() ? "offline" : "unavailable");
@@ -412,6 +474,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         // ignore
       }
       if (track) {
+        repeatSessionRef.current = null;
         void loadAndMaybePlay(
           track.surahNumber,
           track.ayahNumber,
@@ -425,7 +488,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const playNext = useCallback(async () => {
     if (!track) return;
+    repeatSessionRef.current = null;
     continuousEnabledRef.current = true;
+    audioRef.current?.pause();
     const adjacent = await fetchAdjacent(
       track.surahNumber,
       track.ayahNumber,
@@ -442,7 +507,9 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const playPrevious = useCallback(async () => {
     if (!track) return;
+    repeatSessionRef.current = null;
     continuousEnabledRef.current = true;
+    audioRef.current?.pause();
     const adjacent = await fetchAdjacent(
       track.surahNumber,
       track.ayahNumber,
@@ -459,6 +526,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
 
   const retry = useCallback(async () => {
     if (!track) return;
+    repeatSessionRef.current = null;
     continuousEnabledRef.current = true;
     await loadAndMaybePlay(
       track.surahNumber,
@@ -472,6 +540,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     requestIdRef.current += 1;
     continuousEnabledRef.current = false;
     advancingRef.current = false;
+    repeatSessionRef.current = null;
     audioRef.current?.pause();
     if (audioRef.current) {
       audioRef.current.removeAttribute("src");

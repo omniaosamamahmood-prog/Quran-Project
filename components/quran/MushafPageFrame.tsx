@@ -35,7 +35,8 @@ export function MushafPageFrame({ children }: MushafPageFrameProps) {
           --mushaf-corner-w: 36px;
           position: relative;
           box-sizing: border-box;
-          width: min(100%, 36rem);
+          width: 100%;
+          max-width: min(100%, 36rem);
           margin-inline: auto;
           background: var(--mushaf-paper);
           padding: var(--mushaf-border-w);
@@ -74,8 +75,11 @@ export function MushafPageFrame({ children }: MushafPageFrameProps) {
           display: flex;
           flex-direction: column;
           width: 100%;
+          max-width: 100%;
+          min-width: 0;
           box-sizing: border-box;
-          padding: 1rem 1.15rem 0.75rem;
+          overflow-x: clip;
+          padding: 0.85rem 0.75rem 0.75rem;
         }
         @media (min-width: 640px) {
           .mushaf-page-body {

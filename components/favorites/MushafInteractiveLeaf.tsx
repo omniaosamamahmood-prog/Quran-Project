@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { AyahNumber } from "@/components/quran/AyahNumber";
+import { MushafAyahActionSurface } from "@/components/quran/MushafAyahActionSurface";
 import { RubAlHizbMarker } from "@/components/quran/RubAlHizbMarker";
 import { FavoriteToggle } from "@/components/favorites/FavoriteToggle";
 import { loadSessionFavoriteKeys } from "@/components/favorites/session-favorites";
@@ -51,10 +58,44 @@ type RangeMode = {
   startAyahNumber: number;
 };
 
+const AYAH_ACTIONS_HINT_KEY = "quran-companion.ayah-actions-hint-seen";
+const hintListeners = new Set<() => void>();
+
+function subscribeAyahHint(onChange: () => void) {
+  hintListeners.add(onChange);
+  return () => {
+    hintListeners.delete(onChange);
+  };
+}
+
+let ayahHintDismissed = false;
+
+function ayahHintVisible() {
+  if (ayahHintDismissed) {
+    return false;
+  }
+  try {
+    return window.localStorage.getItem(AYAH_ACTIONS_HINT_KEY) !== "1";
+  } catch {
+    return true;
+  }
+}
+
+function hideAyahHint() {
+  ayahHintDismissed = true;
+  try {
+    window.localStorage.setItem(AYAH_ACTIONS_HINT_KEY, "1");
+  } catch {
+    // The hint stays dismissed for this visit if storage is blocked.
+  }
+  for (const listener of hintListeners) {
+    listener();
+  }
+}
+
 /**
  * Mushaf leaf interaction:
- * - Quran text stays non-interactive for calm reading
- * - Tap ayah medallion → shared chrome (Favorites, reading position, memorization, Tafsir, Listen)
+ * - Tap the ayah text or its medallion → the same actions, in a sheet or a nearby panel
  * - Optional same-Surah range selection mode
  */
 export function MushafInteractiveLeaf({
@@ -65,25 +106,55 @@ export function MushafInteractiveLeaf({
   returnPath,
   rubMarkers,
 }: MushafInteractiveLeafProps) {
+  const locale = useLocale();
   const tQuran = useTranslations("Quran");
   const tFavorites = useTranslations("Favorites");
   const tMemorization = useTranslations("Memorization");
-  const tTafsir = useTranslations("Tafsir");
   const activeAyah = useActiveQuranAyah();
   const [selected, setSelected] = useState<SelectedAyah | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+  const ayahGesture = useRef<{ x: number; y: number; moved: boolean } | null>(
+    null,
+  );
+  const clearGestureListeners = useRef<(() => void) | null>(null);
   const [rangeMode, setRangeMode] = useState<RangeMode | null>(null);
   const [rangeError, setRangeError] = useState("");
   const [pendingRangeEnd, setPendingRangeEnd] = useState<SelectedAyah | null>(
     null,
   );
+  const [selectionPage, setSelectionPage] = useState(pageNumber);
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
   const [membershipMap, setMembershipMap] = useState<Record<string, boolean>>(
     {},
   );
   const [unitIdMap, setUnitIdMap] = useState<Record<string, boolean>>({});
+  const hintVisible = useSyncExternalStore(
+    subscribeAyahHint,
+    ayahHintVisible,
+    () => true,
+  );
+
+  if (selectionPage !== pageNumber) {
+    setSelectionPage(pageNumber);
+    setSelected(null);
+    setAnchor(null);
+    setAnchorOffset(null);
+    setRangeMode(null);
+    setPendingRangeEnd(null);
+    setRangeError("");
+  }
   const pageAyahs = segments.flatMap((segment) => segment.ayahs);
   const pageFirst = pageAyahs[0];
   const pageLast = pageAyahs[pageAyahs.length - 1];
+
+  useEffect(() => {
+    return () => {
+      clearGestureListeners.current?.();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -154,8 +225,82 @@ export function MushafInteractiveLeaf({
     setRangeError("");
   }
 
-  function selectAyah(ayah: QuranPageAyah) {
+  function markHintSeen() {
+    hideAyahHint();
+  }
+
+  function closeActions() {
+    setSelected(null);
+    setAnchor(null);
+    setAnchorOffset(null);
+    cancelRangeMode();
+  }
+
+  function rememberAyahPointer(event: ReactPointerEvent<HTMLElement>) {
+    if (event.button !== 0) {
+      return;
+    }
+    clearGestureListeners.current?.();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const gesture = { x: startX, y: startY, moved: false };
+    ayahGesture.current = gesture;
+
+    function onMove(moveEvent: PointerEvent) {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+      if (dx * dx + dy * dy > 64) {
+        gesture.moved = true;
+      }
+    }
+    function stop() {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+      clearGestureListeners.current = null;
+    }
+    clearGestureListeners.current = stop;
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+  }
+
+  function isTextSelectionGesture(event: {
+    clientX: number;
+    clientY: number;
+    shiftKey: boolean;
+  }): boolean {
+    const gesture = ayahGesture.current;
+    ayahGesture.current = null;
+    if (event.shiftKey) {
+      return true;
+    }
+    if (!gesture) {
+      return false;
+    }
+    if (gesture.moved) {
+      return true;
+    }
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    return dx * dx + dy * dy > 64;
+  }
+
+  function selectAyah(
+    ayah: QuranPageAyah,
+    source: HTMLElement,
+    point: { clientX: number; clientY: number },
+  ) {
     setRangeError("");
+    const host = source.closest<HTMLElement>(".mushaf-ayah-hit") ?? source;
+    const rect = host.getBoundingClientRect();
+    const hasPoint = point.clientX !== 0 || point.clientY !== 0;
+    const offset = hasPoint
+      ? {
+          x: point.clientX - rect.left,
+          y: point.clientY - rect.top,
+        }
+      : null;
 
     if (rangeMode) {
       if (ayah.surahNumber !== rangeMode.surahNumber) {
@@ -164,6 +309,8 @@ export function MushafInteractiveLeaf({
         return;
       }
 
+      setAnchor(host);
+      setAnchorOffset(offset);
       setPendingRangeEnd({
         surahNumber: ayah.surahNumber,
         surahName: ayah.surahName,
@@ -176,15 +323,19 @@ export function MushafInteractiveLeaf({
         ayahNumber: ayah.ayahNumber,
         ayahText: ayah.text,
       });
+      markHintSeen();
       return;
     }
 
+    setAnchor(host);
+    setAnchorOffset(offset);
     setSelected({
       surahNumber: ayah.surahNumber,
       surahName: ayah.surahName,
       ayahNumber: ayah.ayahNumber,
       ayahText: ayah.text,
     });
+    markHintSeen();
   }
 
   function startRangeSelection() {
@@ -323,9 +474,25 @@ export function MushafInteractiveLeaf({
                         <span
                           key={`${ayah.surahNumber}:${ayah.ayahNumber}`}
                           id={`ayah-${ayah.surahNumber}-${ayah.ayahNumber}`}
-                          className={
-                            isActiveTrack ? "mushaf-ayah-active" : undefined
-                          }
+                          className={cn(
+                            "mushaf-ayah-hit",
+                            isActiveTrack && "mushaf-ayah-active",
+                            isSelected && "mushaf-ayah-selected",
+                          )}
+                          onPointerDown={rememberAyahPointer}
+                          onClick={(event) => {
+                            const target = event.target;
+                            if (
+                              target instanceof Element &&
+                              target.closest(".mushaf-ayah-marker-btn")
+                            ) {
+                              return;
+                            }
+                            if (isTextSelectionGesture(event)) {
+                              return;
+                            }
+                            selectAyah(ayah, event.currentTarget, event);
+                          }}
                         >
                           {rub ? (
                             <RubAlHizbMarker
@@ -346,14 +513,24 @@ export function MushafInteractiveLeaf({
                               inPendingRange &&
                                 "mushaf-ayah-marker-btn--range",
                             )}
-                            aria-label={tFavorites("mushaf.openActions", {
-                              number: ayah.ayahNumber,
+                            aria-label={tQuran("pageReader.ayahOptions", {
+                              ayah: ayah.ayahNumber,
+                              name: ayah.surahName,
                             })}
+                            aria-haspopup="dialog"
+                            aria-expanded={isSelected}
+                            aria-controls={
+                              isSelected ? "mushaf-ayah-actions" : undefined
+                            }
                             aria-pressed={isSelected}
-                            title={tFavorites("mushaf.openActions", {
-                              number: ayah.ayahNumber,
+                            title={tQuran("pageReader.ayahOptions", {
+                              ayah: ayah.ayahNumber,
+                              name: ayah.surahName,
                             })}
-                            onClick={() => selectAyah(ayah)}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              selectAyah(ayah, event.currentTarget, event);
+                            }}
                           >
                             <AyahNumber
                               number={ayah.ayahNumber}
@@ -384,32 +561,59 @@ export function MushafInteractiveLeaf({
         </MushafPageFrame>
       </article>
 
-      <div className="mushaf-ayah-chrome" aria-live="polite">
-        {rangeMode ? (
-          <div className="mushaf-ayah-panel mushaf-ayah-panel--range">
-            <div className="min-w-0 flex-1 text-center sm:text-start">
-              <p className="text-sm font-medium text-ink">
-                {tMemorization("mushaf.rangeActive", {
-                  surahName: rangeMode.surahName,
-                  start: rangeMode.startAyahNumber,
-                })}
-              </p>
-              <p className="mt-0.5 text-xs text-muted">
-                {pendingRangeEnd
-                  ? tMemorization("mushaf.rangeConfirmHint", {
-                      start: rangeStart,
-                      end: rangeEnd,
-                    })
-                  : tMemorization("mushaf.chooseEndAyah")}
-              </p>
-              {rangeError ? (
-                <p role="alert" className="mt-1 text-xs text-red-700">
-                  {rangeError}
-                </p>
-              ) : null}
-            </div>
+      {hintVisible ? (
+        <p
+          className={cn(
+            "mushaf-ayah-hint",
+            locale === "ar" && "font-naskh",
+          )}
+          data-ayah-hint=""
+        >
+          {tQuran("pageReader.ayahHint")}
+        </p>
+      ) : null}
 
-            <div className="mushaf-ayah-actions">
+      <MushafAyahActionSurface
+        open={selected != null}
+        anchor={anchor}
+        anchorOffset={anchorOffset}
+        title={
+          rangeMode
+            ? tMemorization("mushaf.rangeActive", {
+                surahName: rangeMode.surahName,
+                start: rangeMode.startAyahNumber,
+              })
+            : selected
+              ? tQuran("pageReader.ayahIdentity", {
+                  name: selected.surahName,
+                  ayah: selected.ayahNumber,
+                })
+              : ""
+        }
+        closeLabel={tFavorites("mushaf.dismiss")}
+        onClose={closeActions}
+      >
+        {rangeMode ? (
+          <>
+            <p
+              className={cn(
+                "mb-3 text-center text-xs text-muted",
+                locale === "ar" && "font-naskh",
+              )}
+            >
+              {pendingRangeEnd
+                ? tMemorization("mushaf.rangeConfirmHint", {
+                    start: rangeStart,
+                    end: rangeEnd,
+                  })
+                : tMemorization("mushaf.chooseEndAyah")}
+            </p>
+            {rangeError ? (
+              <p role="alert" className="mb-3 text-center text-xs text-red-700">
+                {rangeError}
+              </p>
+            ) : null}
+            <div className="flex flex-wrap items-center justify-center gap-2">
               {pendingRangeEnd ? (
                 <MemorizeUnitButton
                   key={`range-${rangeIdentity}`}
@@ -426,13 +630,13 @@ export function MushafInteractiveLeaf({
                   onAdded={() => {
                     const keys: string[] = [];
                     for (let n = rangeStart; n <= rangeEnd; n += 1) {
-                      keys.push(
-                        ayahMembershipKey(rangeMode.surahNumber, n),
-                      );
+                      keys.push(ayahMembershipKey(rangeMode.surahNumber, n));
                     }
                     markUnitAdded(rangeIdentity, keys);
                     cancelRangeMode();
                     setSelected(null);
+                    setAnchor(null);
+                    setAnchorOffset(null);
                   }}
                 />
               ) : null}
@@ -444,131 +648,113 @@ export function MushafInteractiveLeaf({
                 {tMemorization("mushaf.cancel")}
               </button>
             </div>
-          </div>
+          </>
         ) : selected ? (
-          <div className="mushaf-ayah-panel">
-            <div className="min-w-0 flex-1 text-center sm:text-start">
-              <p className="text-sm font-medium text-ink">
-                {tFavorites("mushaf.selected", {
-                  surahName: selected.surahName,
-                  ayahNumber: selected.ayahNumber,
-                })}
-              </p>
-              <p className="mt-0.5 text-xs text-muted">
-                {tTafsir("mushaf.actionHint")}
-              </p>
-            </div>
-
-            <div className="mushaf-ayah-actions">
-              <SaveReadingPosition
-                key={`progress-${selected.surahNumber}-${selected.ayahNumber}`}
-                surahNumber={selected.surahNumber}
-                ayahNumber={selected.ayahNumber}
-                pageNumber={pageNumber}
-                returnPath={ayahReturnPath}
-              />
-              <FavoriteToggle
-                key={favoriteKey(selected.surahNumber, selected.ayahNumber)}
-                surahNumber={selected.surahNumber}
-                ayahNumber={selected.ayahNumber}
-                initialFavorited={isFavorited(
-                  selected.surahNumber,
-                  selected.ayahNumber,
-                )}
-                returnPath={ayahReturnPath}
-                variant="button"
-                onFavoritedChange={(favorited) => {
-                  const key = favoriteKey(
-                    selected.surahNumber,
-                    selected.ayahNumber,
-                  );
-                  setFavoriteMap((current) => ({
-                    ...current,
-                    [key]: favorited,
-                  }));
-                }}
-              />
-              <TafsirActionButton
-                key={`tafsir-${selected.surahNumber}-${selected.ayahNumber}`}
-                surahNumber={selected.surahNumber}
-                ayahNumber={selected.ayahNumber}
-                surahName={selected.surahName}
-                ayahText={selected.ayahText}
-              />
-              <ListenAyahButton
-                key={`listen-${selected.surahNumber}-${selected.ayahNumber}`}
-                surahNumber={selected.surahNumber}
-                ayahNumber={selected.ayahNumber}
-              />
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <ListenAyahButton
+              key={`listen-${selected.surahNumber}-${selected.ayahNumber}`}
+              surahNumber={selected.surahNumber}
+              ayahNumber={selected.ayahNumber}
+            />
+            <TafsirActionButton
+              key={`tafsir-${selected.surahNumber}-${selected.ayahNumber}`}
+              surahNumber={selected.surahNumber}
+              ayahNumber={selected.ayahNumber}
+              surahName={selected.surahName}
+              ayahText={selected.ayahText}
+            />
+            <MemorizeUnitButton
+              key={`ayah-${ayahIdentity}`}
+              label={tMemorization("mushaf.memorizeAyah")}
+              pendingLabel={tMemorization("adding")}
+              alreadyAdded={unitAlreadyAdded(ayahIdentity)}
+              returnPath={ayahReturnPath}
+              payload={{
+                unitType: "ayah",
+                surahNumber: selected.surahNumber,
+                startAyahNumber: selected.ayahNumber,
+                endAyahNumber: selected.ayahNumber,
+              }}
+              onAdded={() => {
+                markUnitAdded(ayahIdentity, [
+                  ayahMembershipKey(selected.surahNumber, selected.ayahNumber),
+                ]);
+              }}
+            />
+            <button
+              type="button"
+              onClick={startRangeSelection}
+              className="inline-flex min-h-9 items-center justify-center rounded-xl border border-emerald/20 bg-surface px-3 py-2 text-sm font-semibold text-emerald-deep transition-colors hover:bg-sage/70"
+            >
+              {tMemorization("mushaf.selectRange")}
+            </button>
+            {pageFirst && pageLast ? (
               <MemorizeUnitButton
-                key={`ayah-${ayahIdentity}`}
-                label={tMemorization("mushaf.memorizeAyah")}
+                key={`page-${pageIdentity}`}
+                label={tMemorization("mushaf.memorizePage")}
                 pendingLabel={tMemorization("adding")}
-                alreadyAdded={unitAlreadyAdded(ayahIdentity)}
-                returnPath={ayahReturnPath}
+                alreadyAdded={unitAlreadyAdded(pageIdentity)}
+                returnPath={returnPath}
                 payload={{
-                  unitType: "ayah",
-                  surahNumber: selected.surahNumber,
-                  startAyahNumber: selected.ayahNumber,
-                  endAyahNumber: selected.ayahNumber,
+                  unitType: "page",
+                  pageNumber,
+                  surahNumber: pageFirst.surahNumber,
+                  startAyahNumber: pageFirst.ayahNumber,
+                  endAyahNumber: pageLast.ayahNumber,
                 }}
                 onAdded={() => {
-                  markUnitAdded(ayahIdentity, [
-                    ayahMembershipKey(
-                      selected.surahNumber,
-                      selected.ayahNumber,
+                  markUnitAdded(
+                    pageIdentity,
+                    pageAyahs.map((a) =>
+                      ayahMembershipKey(a.surahNumber, a.ayahNumber),
                     ),
-                  ]);
+                  );
                 }}
               />
-              <button
-                type="button"
-                onClick={startRangeSelection}
-                className="inline-flex min-h-9 items-center justify-center rounded-xl border border-emerald/20 bg-surface px-3 py-2 text-sm font-semibold text-emerald-deep transition-colors hover:bg-sage/70"
-              >
-                {tMemorization("mushaf.selectRange")}
-              </button>
-              {pageFirst && pageLast ? (
-                <MemorizeUnitButton
-                  key={`page-${pageIdentity}`}
-                  label={tMemorization("mushaf.memorizePage")}
-                  pendingLabel={tMemorization("adding")}
-                  alreadyAdded={unitAlreadyAdded(pageIdentity)}
-                  returnPath={returnPath}
-                  payload={{
-                    unitType: "page",
-                    pageNumber,
-                    surahNumber: pageFirst.surahNumber,
-                    startAyahNumber: pageFirst.ayahNumber,
-                    endAyahNumber: pageLast.ayahNumber,
-                  }}
-                  onAdded={() => {
-                    markUnitAdded(
-                      pageIdentity,
-                      pageAyahs.map((a) =>
-                        ayahMembershipKey(a.surahNumber, a.ayahNumber),
-                      ),
-                    );
-                  }}
-                />
-              ) : null}
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
-                className="rounded-xl px-3 py-2 text-sm text-muted transition-colors hover:bg-sage/60 hover:text-ink"
-              >
-                {tFavorites("mushaf.dismiss")}
-              </button>
-            </div>
+            ) : null}
+            <SaveReadingPosition
+              key={`progress-${selected.surahNumber}-${selected.ayahNumber}`}
+              surahNumber={selected.surahNumber}
+              ayahNumber={selected.ayahNumber}
+              pageNumber={pageNumber}
+              returnPath={ayahReturnPath}
+            />
+            <FavoriteToggle
+              key={favoriteKey(selected.surahNumber, selected.ayahNumber)}
+              surahNumber={selected.surahNumber}
+              ayahNumber={selected.ayahNumber}
+              initialFavorited={isFavorited(
+                selected.surahNumber,
+                selected.ayahNumber,
+              )}
+              returnPath={ayahReturnPath}
+              variant="button"
+              onFavoritedChange={(favorited) => {
+                const key = favoriteKey(
+                  selected.surahNumber,
+                  selected.ayahNumber,
+                );
+                setFavoriteMap((current) => ({
+                  ...current,
+                  [key]: favorited,
+                }));
+              }}
+            />
           </div>
-        ) : (
-          <p className="text-center text-sm text-muted/80">
-            {tMemorization("mushaf.selectHint")}
-          </p>
-        )}
-      </div>
+        ) : null}
+      </MushafAyahActionSurface>
 
       <style href="mushaf-ayah-select" precedence="mushaf-ayah-select">{`
+        .mushaf-ayah-hit {
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .mushaf-ayah-selected {
+          background-color: rgba(184, 148, 74, 0.14);
+          border-radius: 0.12em;
+          box-decoration-break: clone;
+          -webkit-box-decoration-break: clone;
+        }
         .mushaf-ayah-active {
           background-color: rgba(184, 148, 74, 0.2);
           border-radius: 0.12em;
@@ -576,8 +762,35 @@ export function MushafInteractiveLeaf({
           -webkit-box-decoration-break: clone;
           transition: background-color 220ms ease;
         }
+        .mushaf-ayah-hit.mushaf-ayah-active,
+        .mushaf-ayah-hit.mushaf-ayah-active:hover {
+          background-color: rgba(184, 148, 74, 0.2);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .mushaf-ayah-hit:hover {
+            background-color: rgba(184, 148, 74, 0.08);
+            border-radius: 0.12em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+          }
+          .mushaf-ayah-hit.mushaf-ayah-selected:hover {
+            background-color: rgba(184, 148, 74, 0.16);
+          }
+        }
+        .mushaf-ayah-hint {
+          margin: 0.35rem auto 0;
+          max-width: 36rem;
+          padding-inline: 1rem;
+          text-align: center;
+          font-size: 0.75rem;
+          line-height: 1.6;
+          color: #6d746c;
+        }
         .mushaf-ayah-marker-btn {
+          position: relative;
           display: inline-flex;
+          align-items: center;
+          justify-content: center;
           padding: 0;
           margin: 0;
           border: 0;
@@ -587,12 +800,21 @@ export function MushafInteractiveLeaf({
           border-radius: 999px;
           line-height: 0;
         }
-        .mushaf-ayah-marker-btn:focus-visible {
-          outline: 2px solid rgba(15, 122, 82, 0.45);
-          outline-offset: 2px;
+        @media (pointer: coarse) {
+          .mushaf-ayah-marker-btn::after {
+            content: "";
+            position: absolute;
+            inset: -0.5rem -0.3rem;
+          }
         }
-        .mushaf-ayah-marker-btn--selected .ayahNumber {
-          filter: drop-shadow(0 0 0.12em rgba(15, 122, 82, 0.45));
+        @media (hover: hover) and (pointer: fine) {
+          .mushaf-ayah-marker-btn:hover .ayahNumber {
+            filter: drop-shadow(0 0 0.16em rgba(15, 122, 82, 0.55));
+          }
+        }
+        .mushaf-ayah-marker-btn:focus-visible {
+          outline: 2px solid rgba(15, 122, 82, 0.75);
+          outline-offset: 3px;
         }
         .mushaf-ayah-marker-btn--saved .ayahNumber {
           filter: drop-shadow(0 0 0.1em rgba(183, 146, 62, 0.55));
@@ -603,38 +825,11 @@ export function MushafInteractiveLeaf({
         .mushaf-ayah-marker-btn--range .ayahNumber {
           filter: drop-shadow(0 0 0.14em rgba(15, 122, 82, 0.65));
         }
-        .mushaf-ayah-chrome {
-          flex-shrink: 0;
-          width: 100%;
-          min-height: 3rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-block: 0.35rem;
-        }
-        .mushaf-ayah-panel {
-          width: min(100%, 52rem);
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: center;
-          gap: 0.75rem 1rem;
-          border: 1px solid rgba(15, 122, 82, 0.14);
-          border-radius: 1rem;
-          background: rgba(250, 248, 242, 0.95);
-          padding: 0.75rem 1rem;
-          box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
-        }
-        .mushaf-ayah-panel--range {
-          border-color: rgba(15, 122, 82, 0.28);
-          background: rgba(232, 243, 236, 0.95);
-        }
-        .mushaf-ayah-actions {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: flex-start;
-          justify-content: center;
-          gap: 0.5rem;
+        .mushaf-ayah-marker-btn--selected .ayahNumber,
+        .mushaf-ayah-marker-btn--selected:hover .ayahNumber {
+          filter: drop-shadow(0 0 0.2em rgba(15, 122, 82, 0.8));
+          box-shadow: 0 0 0 2px rgba(184, 148, 74, 0.95);
+          border-radius: 999px;
         }
       `}</style>
     </>

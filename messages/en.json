@@ -160,7 +160,10 @@
       "rubMarker": "Rubʿ al-Hizb, Hizb {hizb}, quarter {quarter}",
       "hizb": "Hizb {number}",
       "locationQuarter": "Quarter {quarter}",
-      "locationPage": "Page {page}"
+      "locationPage": "Page {page}",
+      "ayahHint": "Tap an ayah to view its options",
+      "ayahOptions": "Options for ayah {ayah} of Surah {name}",
+      "ayahIdentity": "Surah {name} • Ayah {ayah}"
     }
   },
   "Footer": {
@@ -288,13 +291,22 @@
     "markMemorized": "Mark as memorized",
     "moveToLearning": "Back to learning",
     "remove": "Remove",
-    "removeConfirm": "Remove this unit from your memorization list?",
+    "removeDialog": {
+      "title": "Remove from memorization?",
+      "description": "This unit will be removed from your memorization list.",
+      "confirm": "Remove",
+      "cancel": "Cancel"
+    },
     "updating": "Updating...",
     "emptyTitle": "You haven't started memorizing yet.",
     "emptyDescription": "Choose an ayah, a range, or a full page from the Mushaf and add it to your memorization list.",
     "emptyCta": "Open the Quran",
     "openInQuran": "Open in Quran",
     "goToReview": "Go to Review",
+    "repeat": {
+      "label": "Repeat",
+      "option": "{count}×"
+    },
     "unit": {
       "ayah": "Surah {name} · Ayah {ayah}",
       "range": "Surah {name} · Ayahs {start}–{end}",

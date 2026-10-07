@@ -221,7 +221,10 @@
       "navigation": "التنقل بين صفحات المصحف",
       "rubMarker": "ربع الحزب، الحزب {hizb}، الربع {quarter}",
       "locationQuarter": "{quarter, select, 1 {الربع الأول} 2 {الربع الثاني} 3 {الربع الثالث} 4 {الربع الرابع} other {الربع}}",
-      "locationPage": "صفحة {page}"
+      "locationPage": "صفحة {page}",
+      "ayahHint": "اضغط على الآية لعرض الخيارات",
+      "ayahOptions": "خيارات الآية {ayah} من سورة {name}",
+      "ayahIdentity": "سورة {name} • الآية {ayah}"
     }
   },
   "Footer": {
@@ -349,13 +352,22 @@
     "markMemorized": "تم الحفظ",
     "moveToLearning": "إعادة إلى قيد الحفظ",
     "remove": "إزالة",
-    "removeConfirm": "إزالة هذه الوحدة من قائمة الحفظ؟",
+    "removeDialog": {
+      "title": "إزالة من قائمة الحفظ؟",
+      "description": "سيتم إزالة هذه الوحدة من قائمة الحفظ.",
+      "confirm": "إزالة",
+      "cancel": "إلغاء"
+    },
     "updating": "جاري التحديث...",
     "emptyTitle": "لم تبدأ خطة الحفظ بعد",
     "emptyDescription": "اختر آية أو مجموعة آيات أو صفحة كاملة من المصحف وأضفها إلى الحفظ.",
     "emptyCta": "افتح القرآن",
     "openInQuran": "فتح في القرآن",
     "goToReview": "انتقل إلى المراجعة",
+    "repeat": {
+      "label": "التكرار",
+      "option": "{count}×"
+    },
     "unit": {
       "ayah": "سورة {name} • الآية {ayah}",
       "range": "سورة {name} • الآيات {start}–{end}",
